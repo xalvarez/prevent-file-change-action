@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "prevent-file-change",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Fail a pull request workflow if a certain file is changed",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,17 +15,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/xalvarez/prevent-file-change-action.git"
   },
   "keywords": [
-    "actions",
-    "node",
-    "setup"
+    "github-actions",
+    "node"
   ],
-  "author": "",
+  "author": "Xavier Alvarez",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.6"
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
