@@ -1,16 +1,17 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const eventName: string = github.context.eventName
+    if (eventName === 'pull_request') {
+      const pushPayload = github.context.payload
+      core.info(`Payload is: ${JSON.stringify(pushPayload)}`)
+    } else {
+      core.setFailed(
+        `Only pull_request events are supported. Event was: ${eventName}`
+      )
+    }
   } catch (error) {
     core.setFailed(error.message)
   }

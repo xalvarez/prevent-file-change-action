@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Prevent file change'
+description: 'Fail a pull request workflow if a certain file is changed'
+author: 'Xavier Alvarez'
 inputs:
-  milliseconds: # change this
+  githubToken:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'GitHub token'
 runs:
   using: 'node12'
   main: 'dist/index.js'
