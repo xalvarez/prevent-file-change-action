@@ -59,7 +59,6 @@ class GitHubService {
     }
 }
 exports.default = GitHubService;
-GitHubService.MAX_ITEMS_PER_PAGE = 100;
 
 
 /***/ }),

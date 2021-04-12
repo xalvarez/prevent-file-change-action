@@ -6,7 +6,6 @@ export interface IFile {
 }
 
 export default class GitHubService {
-  private static readonly MAX_ITEMS_PER_PAGE: number = 100
   private readonly octokit
 
   constructor(gitHubToken: string) {
