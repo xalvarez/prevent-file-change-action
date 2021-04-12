@@ -6,8 +6,10 @@ export default class PatternMatcher {
     files: IFile[],
     pattern: string
   ): Promise<void> {
+      core.info(`pattern: ${pattern} files: ${files}`)
     if (files && files.length > 0) {
       const regExp = new RegExp(pattern)
+      core.info(`Find: ${files.find(file => regExp.test(file.filename))}`)
       files.find(file => regExp.test(file.filename))
         ? core.debug(`There isn't any file matching the pattern ${pattern}`)
         : this.setFailed(pattern)
