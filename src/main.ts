@@ -19,7 +19,7 @@ async function run(): Promise<void> {
         )
         const pattern: string = core.getInput('pattern')
         const patternMatcher = new PatternMatcher()
-        await patternMatcher.isThereAnyBlacklistedFile(files, pattern)
+        await patternMatcher.checkChangesFilesAgainstPattern(files, pattern)
       } else {
         core.setFailed('Pull request number is missing in github event payload')
       }

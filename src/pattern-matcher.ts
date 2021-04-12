@@ -1,13 +1,21 @@
 import {IFile} from './github-service'
+import * as core from '@actions/core'
 
 export default class PatternMatcher {
-  async isThereAnyBlacklistedFile(
+  async checkChangesFilesAgainstPattern(
     files: IFile[],
     pattern: string
-  ): Promise<boolean> {
+  ): Promise<void> {
     if (files && files.length > 0) {
       const regExp = new RegExp(pattern)
-      return files.find(file => regExp.test(file.filename)) ? true : false
-    } else return false
+      files.find(file => regExp.test(file.filename))
+        ? core.debug(`There isn't any file matching the pattern ${pattern}`)
+        : this.setFailed(pattern)
+    } else this.setFailed(pattern)
+  }
+
+  private async setFailed(pattern: string): Promise<void> {
+    core.setFailed(`There is at least one file matching the pattern ${pattern}`)
+    return
   }
 }
