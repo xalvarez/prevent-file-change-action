@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
-import GitHubService from './github-service'
+import GitHubService, {IFile} from './github-service'
+import PatternMatcher from './pattern-matcher'
 
 async function run(): Promise<void> {
   try {
@@ -11,11 +12,14 @@ async function run(): Promise<void> {
       const pullRequestNumber: number =
         context.payload?.pull_request?.number || 0
       if (pullRequestNumber) {
-        await gitHubService.getChangedFiles(
+        const files: IFile[] = await gitHubService.getChangedFiles(
           context.repo.owner,
           context.repo.repo,
           pullRequestNumber
         )
+        const pattern: string = core.getInput('pattern')
+        const patternMatcher = new PatternMatcher()
+        await patternMatcher.isThereAnyBlacklistedFile(files, pattern)
       } else {
         core.setFailed('Pull request number is missing in github event payload')
       }
