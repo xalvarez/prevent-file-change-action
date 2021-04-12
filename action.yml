@@ -7,7 +7,7 @@ inputs:
     description: 'GitHub token'
   pattern:
     required: true
-    description: JavaScript regular expression matching files which must not be changed
+    description: 'JavaScript regular expression matching files which must not be changed'
 runs:
   using: 'node12'
   main: 'dist/index.js'
