@@ -103,6 +103,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(186));
 const github_1 = __webpack_require__(438);
 const github_service_1 = __importDefault(__webpack_require__(131));
+const pattern_matcher_1 = __importDefault(__webpack_require__(989));
 function run() {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
@@ -113,7 +114,10 @@ function run() {
                 const gitHubService = new github_service_1.default(githubToken);
                 const pullRequestNumber = ((_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.number) || 0;
                 if (pullRequestNumber) {
-                    yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
+                    const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
+                    const pattern = core.getInput('pattern');
+                    const patternMatcher = new pattern_matcher_1.default();
+                    yield patternMatcher.checkChangesFilesAgainstPattern(files, pattern);
                 }
                 else {
                     core.setFailed('Pull request number is missing in github event payload');
@@ -129,6 +133,66 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 989:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__webpack_require__(186));
+class PatternMatcher {
+    checkChangesFilesAgainstPattern(files, pattern) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (files && files.length > 0) {
+                const regExp = new RegExp(pattern);
+                files.find(file => regExp.test(file.filename))
+                    ? this.setFailed(pattern)
+                    : core.debug(`There isn't any file matching the pattern ${pattern}`);
+            }
+            else
+                this.setFailed(pattern);
+        });
+    }
+    setFailed(pattern) {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.setFailed(`There is at least one file matching the pattern ${pattern}`);
+            return;
+        });
+    }
+}
+exports.default = PatternMatcher;
 
 
 /***/ }),
