@@ -11,13 +11,17 @@ async function run(): Promise<void> {
       const gitHubService = new GitHubService(githubToken)
       const pullRequestNumber: number =
         context.payload?.pull_request?.number || 0
+      core.info(`Pull request number: ${pullRequestNumber}`)
       if (pullRequestNumber) {
+        core.info('Retrieving changed files')
         const files: IFile[] = await gitHubService.getChangedFiles(
           context.repo.owner,
           context.repo.repo,
           pullRequestNumber
         )
+        core.info(`Retrieved files: ${files}`)
         const pattern: string = core.getInput('pattern')
+        core.info(`Pattern: ${pattern}`)
         const patternMatcher = new PatternMatcher()
         await patternMatcher.checkChangesFilesAgainstPattern(files, pattern)
       } else {

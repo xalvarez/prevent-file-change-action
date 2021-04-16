@@ -113,9 +113,13 @@ function run() {
                 const githubToken = core.getInput('githubToken');
                 const gitHubService = new github_service_1.default(githubToken);
                 const pullRequestNumber = ((_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.number) || 0;
+                core.info(`Pull request number: ${pullRequestNumber}`);
                 if (pullRequestNumber) {
+                    core.info('Retrieving changed files');
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
+                    core.info(`Retrieved files: ${files}`);
                     const pattern = core.getInput('pattern');
+                    core.info(`Pattern: ${pattern}`);
                     const patternMatcher = new pattern_matcher_1.default();
                     yield patternMatcher.checkChangesFilesAgainstPattern(files, pattern);
                 }
@@ -175,8 +179,10 @@ const core = __importStar(__webpack_require__(186));
 class PatternMatcher {
     checkChangesFilesAgainstPattern(files, pattern) {
         return __awaiter(this, void 0, void 0, function* () {
+            core.info(`pattern: ${pattern} files: ${files}`);
             if (files && files.length > 0) {
                 const regExp = new RegExp(pattern);
+                core.info(`Find: ${files.find(file => regExp.test(file.filename))}`);
                 files.find(file => regExp.test(file.filename))
                     ? core.debug(`There isn't any file matching the pattern ${pattern}`)
                     : this.setFailed(pattern);
