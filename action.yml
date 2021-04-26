@@ -1,6 +1,9 @@
 name: 'Prevent file change'
 description: 'Fail a pull request workflow if certain files are changed'
 author: 'Xavier Alvarez'
+branding:
+  icon: 'stop-circle'
+  color: 'red'
 inputs:
   githubToken:
     required: true
