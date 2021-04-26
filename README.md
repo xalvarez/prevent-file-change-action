@@ -1,13 +1,46 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
-
 # Prevent file change action
+
+**prevent-file-change-action** is a GitHub Action which allows you to force a workflow fail if
+a **pull request** attempts to modify a given file.
+
+Syntax:
+
+```
+- name: Prevent file change
+  uses: uses: xalvarez/prevent-file-change-action@v1
+  with:
+    githubToken: ${{ secrets.GITHUB_TOKEN }}
+    pattern: .*.example
+```
+
+Where `pattern` is a valid JavaScript regular expression.
+See: [Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+
+In the example above, files with `.example` extension won't be allowed to be changed.
+
+**Note**: This Action supports pull request events only.
+
+## Development
+
+To work on this Action you first need to install npm dependencies:
+
+```
+npm i
+```
+
+Afterwards, apply any changes you want, write some tests and run all test by calling:
+
+```
+npm test
+```
+
+Once everything is fine run `npm run all`, which will also update `dist` files.
 
 ## License
 
-This repository was created using [actions/typescript-action](https://github.com/actions/typescript-action) as template.
-The corresponding license is included here:
+**Prevent file change action's** license can be found under [LICENSE](LICENSE).
+Additionally, this repository was created using [actions/typescript-action](https://github.com/actions/typescript-action) as template.
+Its license is included here:
 
 ```
 The MIT License (MIT)
