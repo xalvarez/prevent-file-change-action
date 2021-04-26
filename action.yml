@@ -1,5 +1,5 @@
 name: 'Prevent file change'
-description: 'Fail a pull request workflow if a certain file is changed'
+description: 'Fail a pull request workflow if certain files are changed'
 author: 'Xavier Alvarez'
 inputs:
   githubToken:

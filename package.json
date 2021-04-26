@@ -1,8 +1,8 @@
 {
   "name": "prevent-file-change",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "Fail a pull request workflow if a certain file is changed",
+  "description": "Fail a pull request workflow if certain files are changed",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
