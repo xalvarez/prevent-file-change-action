@@ -11,7 +11,7 @@ export default class PatternMatcher {
       files.find(file => regExp.test(file.filename))
         ? this.setFailed(pattern)
         : core.debug(`There isn't any file matching the pattern ${pattern}`)
-    } else this.setFailed(pattern)
+    } else core.debug(`This commit doesn't contain any files`)
   }
 
   private async setFailed(pattern: string): Promise<void> {
