@@ -13,7 +13,7 @@ Syntax:
     pattern: .*.example
 ```
 
-Where `pattern` is a valid JavaScript regular expression.
+Where `pattern` is a valid JavaScript regular expression matching filenames (including path) of files which must not be changed.
 See: [Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
 
 In the example above, files with `.example` extension won't be allowed to be changed.
