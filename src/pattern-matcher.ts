@@ -8,7 +8,7 @@ export default class PatternMatcher {
   ): Promise<void> {
     if (files && files.length > 0) {
       const regExp = new RegExp(pattern)
-      files.find(file => regExp.test(file.filename))
+      files.some(file => regExp.test(file.filename))
         ? this.setFailed(pattern)
         : core.debug(`There isn't any file matching the pattern ${pattern}`)
     } else core.debug(`This commit doesn't contain any files`)
