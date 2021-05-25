@@ -21,7 +21,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern: string = '.*.js'
 
-    await patternMatcher.checkChangesFilesAgainstPattern(files, pattern)
+    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
     expect(coreSetFailedSpy).toHaveBeenCalledTimes(1)
     expect(coreDebugSpy).toHaveBeenCalledTimes(0)
@@ -31,7 +31,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern: string = '.*.ts'
 
-    await patternMatcher.checkChangesFilesAgainstPattern(files, pattern)
+    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
     expect(coreSetFailedSpy).toHaveBeenCalledTimes(0)
     expect(coreDebugSpy).toHaveBeenCalledTimes(1)
@@ -41,7 +41,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = []
     const pattern: string = '.*'
 
-    await patternMatcher.checkChangesFilesAgainstPattern(files, pattern)
+    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
     expect(coreSetFailedSpy).toHaveBeenCalledTimes(0)
     expect(coreDebugSpy).toHaveBeenCalledTimes(1)

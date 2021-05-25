@@ -116,7 +116,7 @@ function run() {
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
                     const pattern = core.getInput('pattern');
                     const patternMatcher = new pattern_matcher_1.default();
-                    yield patternMatcher.checkChangesFilesAgainstPattern(files, pattern);
+                    yield patternMatcher.checkChangedFilesAgainstPattern(files, pattern);
                 }
                 else {
                     core.setFailed('Pull request number is missing in github event payload');
@@ -172,9 +172,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 class PatternMatcher {
-    checkChangesFilesAgainstPattern(files, pattern) {
+    checkChangedFilesAgainstPattern(files, pattern) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (files && files.length > 0) {
+            if ((files === null || files === void 0 ? void 0 : files.length) > 0) {
                 const regExp = new RegExp(pattern);
                 files.some(file => regExp.test(file.filename))
                     ? this.setFailed(pattern)
