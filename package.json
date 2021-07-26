@@ -1,6 +1,6 @@
 {
   "name": "prevent-file-change",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Fail a pull request workflow if certain files are changed",
   "main": "lib/main.js",
