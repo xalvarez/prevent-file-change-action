@@ -100,9 +100,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const github_1 = __nccwpck_require__(438);
 const github_service_1 = __importDefault(__nccwpck_require__(131));
 const pattern_matcher_1 = __importDefault(__nccwpck_require__(989));
+const github_1 = __nccwpck_require__(438);
 function run() {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {

@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import {context} from '@actions/github'
 import GitHubService, {IFile} from './github-service'
 import PatternMatcher from './pattern-matcher'
+import {context} from '@actions/github'
 
 async function run(): Promise<void> {
   try {

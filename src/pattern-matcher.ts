@@ -1,5 +1,5 @@
-import {IFile} from './github-service'
 import * as core from '@actions/core'
+import {IFile} from './github-service'
 
 export default class PatternMatcher {
   async checkChangedFilesAgainstPattern(
