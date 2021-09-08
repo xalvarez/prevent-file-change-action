@@ -28,8 +28,12 @@ async function run(): Promise<void> {
         `Only pull_request events are supported. Event was: ${eventName}`
       )
     }
-  } catch (error) {
-    core.setFailed(error.message)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      core.setFailed(error.message)
+    } else {
+      core.setFailed('Unknown error occurred')
+    }
   }
 }
 
