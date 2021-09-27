@@ -1,6 +1,7 @@
 # Hidden files and folders
 .*
 !.gitignore
+!.github
 
 # Dependency directory
 node_modules
