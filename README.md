@@ -11,6 +11,7 @@ Syntax:
   with:
     githubToken: ${{ secrets.GITHUB_TOKEN }}
     pattern: .*.example
+    trustedAuthors: xalvarez
 ```
 
 Where `pattern` is a valid JavaScript regular expression matching filenames (including path) of files which must not be changed.

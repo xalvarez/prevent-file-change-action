@@ -1,6 +1,37 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 9859:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isTrustedAuthor = void 0;
+function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (trustedAuthors) {
+            const authors = trustedAuthors.split(',').map((author) => author.trim());
+            return authors.includes(pullRequestAuthor);
+        }
+        else
+            return true;
+    });
+}
+exports.isTrustedAuthor = isTrustedAuthor;
+
+
+/***/ }),
+
 /***/ 131:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -103,18 +134,24 @@ const core = __importStar(__nccwpck_require__(2186));
 const github_service_1 = __importDefault(__nccwpck_require__(131));
 const pattern_matcher_1 = __importDefault(__nccwpck_require__(2989));
 const github_1 = __nccwpck_require__(5438);
+const author_checker_1 = __nccwpck_require__(9859);
 function run() {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const trustedAuthors = core.getInput('trustedAuthors');
+            const pullRequestAuthor = github_1.context.actor;
             const eventName = github_1.context.eventName;
-            if (eventName === 'pull_request') {
-                const githubToken = core.getInput('githubToken');
+            if (yield (0, author_checker_1.isTrustedAuthor)(pullRequestAuthor, trustedAuthors)) {
+                core.debug(`${pullRequestAuthor} is a trusted author: [${trustedAuthors}]`);
+            }
+            else if (eventName === 'pull_request') {
+                const githubToken = core.getInput('githubToken', { required: true });
                 const gitHubService = new github_service_1.default(githubToken);
                 const pullRequestNumber = ((_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.number) || 0;
                 if (pullRequestNumber) {
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
-                    const pattern = core.getInput('pattern');
+                    const pattern = core.getInput('pattern', { required: true });
                     const patternMatcher = new pattern_matcher_1.default();
                     yield patternMatcher.checkChangedFilesAgainstPattern(files, pattern);
                 }
