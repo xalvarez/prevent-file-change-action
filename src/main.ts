@@ -2,31 +2,33 @@ import * as core from '@actions/core'
 import GitHubService, {IFile} from './github-service'
 import PatternMatcher from './pattern-matcher'
 import {context} from '@actions/github'
+import {isTrustedAuthor} from './author-checker'
 
 async function run(): Promise<void> {
   try {
+    const trustedAuthors: string = core.getInput('trustedAuthors')
+    const pullRequestAuthor: string = context.actor
     const eventName: string = context.eventName
-    if (eventName === 'pull_request') {
-      const githubToken: string = core.getInput('githubToken')
+    if (await isTrustedAuthor(pullRequestAuthor, trustedAuthors)) {
+      core.debug(`${pullRequestAuthor} is a trusted author: [${trustedAuthors}]`)
+    } else if (eventName === 'pull_request') {
+      const githubToken: string = core.getInput('githubToken', {required: true})
       const gitHubService = new GitHubService(githubToken)
-      const pullRequestNumber: number =
-        context.payload?.pull_request?.number || 0
+      const pullRequestNumber: number = context.payload?.pull_request?.number || 0
       if (pullRequestNumber) {
         const files: IFile[] = await gitHubService.getChangedFiles(
           context.repo.owner,
           context.repo.repo,
           pullRequestNumber
         )
-        const pattern: string = core.getInput('pattern')
+        const pattern: string = core.getInput('pattern', {required: true})
         const patternMatcher = new PatternMatcher()
         await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
       } else {
         core.setFailed('Pull request number is missing in github event payload')
       }
     } else {
-      core.setFailed(
-        `Only pull_request events are supported. Event was: ${eventName}`
-      )
+      core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`)
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
