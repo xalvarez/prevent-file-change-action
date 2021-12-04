@@ -13,7 +13,7 @@ inputs:
     description: 'JavaScript regular expression matching filenames (including path) of files which must not be changed'
   trustedAuthors:
     required: false
-    description: 'Always trust pull request authors includes in this comma separated list, e.g.: user1, user2, user3'
+    description: 'Always trust pull request authors included in this comma separated list, e.g.: user1, user2, user3'
 runs:
   using: 'node12'
   main: 'dist/index.js'
