@@ -2,10 +2,7 @@ import * as core from '@actions/core'
 import {IFile} from './github-service'
 
 export default class PatternMatcher {
-  async checkChangedFilesAgainstPattern(
-    files: IFile[],
-    pattern: string
-  ): Promise<void> {
+  async checkChangedFilesAgainstPattern(files: IFile[], pattern: string): Promise<void> {
     if (files?.length > 0) {
       const regExp = new RegExp(pattern)
       files.some(file => regExp.test(file.filename))
