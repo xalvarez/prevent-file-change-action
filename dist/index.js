@@ -220,14 +220,14 @@ class PatternMatcher {
             if ((files === null || files === void 0 ? void 0 : files.length) > 0) {
                 const regExp = new RegExp(pattern);
                 files.some(file => regExp.test(file.filename))
-                    ? this.setFailed(pattern)
+                    ? yield PatternMatcher.setFailed(pattern)
                     : core.debug(`There isn't any file matching the pattern ${pattern}`);
             }
             else
                 core.debug(`This commit doesn't contain any files`);
         });
     }
-    setFailed(pattern) {
+    static setFailed(pattern) {
         return __awaiter(this, void 0, void 0, function* () {
             core.setFailed(`There is at least one file matching the pattern ${pattern}`);
             return;
