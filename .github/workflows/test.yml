@@ -25,4 +25,4 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           pattern: .*json
-          trustedAuthors: xalvarez, dependabot
+          trustedAuthors: xalvarez, dependabot[bot]
