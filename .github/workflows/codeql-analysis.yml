@@ -10,7 +10,7 @@ on:
 
 jobs:
   analyze:
-    name: Analyze
+    name: analyze
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -23,5 +23,6 @@ jobs:
       uses: github/codeql-action/init@v2.1.22
       with:
         languages: javascript
+        config-file: ./.github/codeql/codeql-config.yml
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2.1.22
