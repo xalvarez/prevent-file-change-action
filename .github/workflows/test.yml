@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
