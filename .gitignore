@@ -2,6 +2,7 @@
 .*
 !.gitignore
 !.github
+!.npmrc
 
 # Dependency directory
 node_modules
