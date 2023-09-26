@@ -15,5 +15,5 @@ inputs:
     required: false
     description: 'Always trust pull request authors included in this comma separated list, e.g.: user1, user2, user3'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
