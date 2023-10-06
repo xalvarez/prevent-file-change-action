@@ -20,9 +20,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4.1.0
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2.21.9
+      uses: github/codeql-action/init@v2.22.0
       with:
         languages: javascript
         config-file: ./.github/codeql/codeql-config.yml
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2.21.9
+      uses: github/codeql-action/analyze@v2.22.0
