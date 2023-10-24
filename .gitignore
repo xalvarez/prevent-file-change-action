@@ -1,6 +1,5 @@
 # Hidden files and folders
 .*
-!.devcontainer
 !.gitignore
 !.github
 !.npmrc
