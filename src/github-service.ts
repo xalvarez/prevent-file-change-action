@@ -12,17 +12,11 @@ export default class GitHubService {
     this.octokit = getOctokit(gitHubToken)
   }
 
-  async getChangedFilesForCommits(
-    repositoryOwner: string,
-    repositoryName: string,
-    base: string,
-    head: string
-  ): Promise<IFile[]> {
-    const responseBody = await this.octokit.paginate(this.octokit.rest.repos.compareCommits, {
+  async getChangedFilesForCommits(repositoryOwner: string, repositoryName: string, basehead: string): Promise<IFile[]> {
+    const responseBody = await this.octokit.paginate(this.octokit.rest.repos.compareCommitsWithBasehead, {
       owner: repositoryOwner,
       repo: repositoryName,
-      base,
-      head
+      basehead
     })
 
     const files: IFile[] =
@@ -30,7 +24,7 @@ export default class GitHubService {
         return {filename: file.filename} as IFile
       }) || []
 
-    core.debug(`Commits ${base}...${head} includes following files: ${JSON.stringify(files)}`)
+    core.debug(`Commits ${basehead} includes following files: ${JSON.stringify(files)}`)
 
     return files
   }
