@@ -19,11 +19,13 @@ async function run(): Promise<void> {
 
     let files: IFile[]
     if (eventName === 'push') {
-      files = await gitHubService.getChangedFilesForCommit(
-        context.repo.owner,
-        context.repo.repo,
-        context.sha
-      )
+      const base = context.payload?.before || ''
+      const head = context.payload?.after || ''
+      if (base === '' || head === '') {
+        core.setFailed('Base or head commit is missing in github event payload')
+        return
+      }
+      files = await gitHubService.getChangedFilesForCommits(context.repo.owner, context.repo.repo, base, head)
     } else if (eventName === 'pull_request') {
       const pullRequestNumber: number = context.payload?.pull_request?.number || 0
       if (pullRequestNumber === 0) {
@@ -31,11 +33,7 @@ async function run(): Promise<void> {
         return
       }
 
-      files = await gitHubService.getChangedFilesForPR(
-        context.repo.owner,
-        context.repo.repo,
-        pullRequestNumber
-      )
+      files = await gitHubService.getChangedFilesForPR(context.repo.owner, context.repo.repo, pullRequestNumber)
     } else {
       core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`)
       return

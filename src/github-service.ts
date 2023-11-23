@@ -12,23 +12,34 @@ export default class GitHubService {
     this.octokit = getOctokit(gitHubToken)
   }
 
-  async getChangedFilesForCommit(repositoryOwner: string, repositoryName: string, commitSha: string): Promise<IFile[]> {
-    const responseBody = await this.octokit.paginate(this.octokit.rest.repos.getCommit, {
+  async getChangedFilesForCommits(
+    repositoryOwner: string,
+    repositoryName: string,
+    base: string,
+    head: string
+  ): Promise<IFile[]> {
+    const responseBody = await this.octokit.paginate(this.octokit.rest.repos.compareCommits, {
       owner: repositoryOwner,
       repo: repositoryName,
-      ref: commitSha
+      base,
+      head
     })
 
-    const files: IFile[] = responseBody.files?.map(file => {
-      return {filename: file.filename} as IFile
-    }) || []
+    const files: IFile[] =
+      responseBody.files?.map(file => {
+        return {filename: file.filename} as IFile
+      }) || []
 
-    core.debug(`Commit ${commitSha} includes following files: ${JSON.stringify(files)}`)
+    core.debug(`Commits ${base}...${head} includes following files: ${JSON.stringify(files)}`)
 
     return files
   }
 
-  async getChangedFilesForPR(repositoryOwner: string, repositoryName: string, pullRequestNumber: number): Promise<IFile[]> {
+  async getChangedFilesForPR(
+    repositoryOwner: string,
+    repositoryName: string,
+    pullRequestNumber: number
+  ): Promise<IFile[]> {
     const responseBody = await this.octokit.paginate(this.octokit.rest.pulls.listFiles, {
       owner: repositoryOwner,
       repo: repositoryName,
