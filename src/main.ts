@@ -12,37 +12,25 @@ async function run(): Promise<void> {
     core.debug(`Event='${eventName}', Author='${pullRequestAuthor}', Trusted Authors='${trustedAuthors}'`)
     if (await isTrustedAuthor(pullRequestAuthor, trustedAuthors)) {
       core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`)
-    }
-
-    const githubToken: string = core.getInput('githubToken', {required: true})
-    const gitHubService = new GitHubService(githubToken)
-
-    let files: IFile[]
-    if (eventName === 'push') {
-      const base = context.payload?.before || ''
-      const head = context.payload?.after || ''
-      if (base === '' || head === '') {
-        core.setFailed('Base or head commit is missing in github event payload')
-        return
-      }
-      const basehead = `${base}..${head}`
-      files = await gitHubService.getChangedFilesForCommits(context.repo.owner, context.repo.repo, basehead)
     } else if (eventName === 'pull_request') {
+      const githubToken: string = core.getInput('githubToken', {required: true})
+      const gitHubService = new GitHubService(githubToken)
       const pullRequestNumber: number = context.payload?.pull_request?.number || 0
-      if (pullRequestNumber === 0) {
+      if (pullRequestNumber) {
+        const files: IFile[] = await gitHubService.getChangedFiles(
+          context.repo.owner,
+          context.repo.repo,
+          pullRequestNumber
+        )
+        const pattern: string = core.getInput('pattern', {required: true})
+        const patternMatcher = new PatternMatcher()
+        await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
+      } else {
         core.setFailed('Pull request number is missing in github event payload')
-        return
       }
-
-      files = await gitHubService.getChangedFilesForPR(context.repo.owner, context.repo.repo, pullRequestNumber)
     } else {
       core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`)
-      return
     }
-
-    const pattern: string = core.getInput('pattern', {required: true})
-    const patternMatcher = new PatternMatcher()
-    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
   } catch (error: unknown) {
     if (error instanceof Error) {
       core.setFailed(error.message)
