@@ -21,17 +21,7 @@ See: [Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScri
 
 In the example above, files with `.example` extension won't be allowed to be changed.
 
-**Note**: This Action supports pull request events only.
-
-## GITHUB_TOKEN permissions
-
-The required GITHUB_TOKEN permissions are: `pull-requests: read`. Therefore you may configure your workflow or job's
-permissions as follows:
-
-```
-permissions:
-  pull-requests: read
-```
+**Note**: This Action supports pull request and push events only.
 
 ## Development
 
