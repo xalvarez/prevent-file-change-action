@@ -34,5 +34,5 @@ jobs:
         uses: ./
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          pattern: .*json
+          pattern: .*xalvarez
           trustedAuthors: xalvarez, dependabot[bot]
