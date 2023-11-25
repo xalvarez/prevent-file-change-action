@@ -76,31 +76,17 @@ class GitHubService {
     constructor(gitHubToken) {
         this.octokit = (0, github_1.getOctokit)(gitHubToken);
     }
-    getChangedFilesForCommits(repositoryOwner, repositoryName, basehead) {
-        var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            const responseBody = yield this.octokit.paginate(this.octokit.rest.repos.compareCommitsWithBasehead, {
-                owner: repositoryOwner,
-                repo: repositoryName,
-                basehead
-            });
-            const files = ((_a = responseBody.files) === null || _a === void 0 ? void 0 : _a.map(file => {
-                return { filename: file.filename };
-            })) || [];
-            core.debug(`Commits ${basehead} includes following files: ${JSON.stringify(files)}`);
-            return files;
-        });
-    }
-    getChangedFilesForPR(repositoryOwner, repositoryName, pullRequestNumber) {
+    getChangedFiles(repositoryOwner, repositoryName, pullRequestNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             const responseBody = yield this.octokit.paginate(this.octokit.rest.pulls.listFiles, {
                 owner: repositoryOwner,
                 repo: repositoryName,
                 pull_number: pullRequestNumber
             });
-            const files = responseBody.map(file => {
-                return { filename: file.filename };
-            });
+            const files = [];
+            for (const file of responseBody) {
+                files.push({ filename: file.filename });
+            }
             core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`);
             return files;
         });
@@ -158,7 +144,7 @@ const pattern_matcher_1 = __importDefault(__nccwpck_require__(2989));
 const github_1 = __nccwpck_require__(5438);
 const author_checker_1 = __nccwpck_require__(9859);
 function run() {
-    var _a, _b, _c, _d;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const trustedAuthors = core.getInput('trustedAuthors');
@@ -168,34 +154,23 @@ function run() {
             if (yield (0, author_checker_1.isTrustedAuthor)(pullRequestAuthor, trustedAuthors)) {
                 core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`);
             }
-            const githubToken = core.getInput('githubToken', { required: true });
-            const gitHubService = new github_service_1.default(githubToken);
-            let files;
-            if (eventName === 'push') {
-                const base = ((_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.before) || '';
-                const head = ((_b = github_1.context.payload) === null || _b === void 0 ? void 0 : _b.after) || '';
-                if (base === '' || head === '') {
-                    core.setFailed('Base or head commit is missing in github event payload');
-                    return;
-                }
-                const basehead = `${base}..${head}`;
-                files = yield gitHubService.getChangedFilesForCommits(github_1.context.repo.owner, github_1.context.repo.repo, basehead);
-            }
             else if (eventName === 'pull_request') {
-                const pullRequestNumber = ((_d = (_c = github_1.context.payload) === null || _c === void 0 ? void 0 : _c.pull_request) === null || _d === void 0 ? void 0 : _d.number) || 0;
-                if (pullRequestNumber === 0) {
-                    core.setFailed('Pull request number is missing in github event payload');
-                    return;
+                const githubToken = core.getInput('githubToken', { required: true });
+                const gitHubService = new github_service_1.default(githubToken);
+                const pullRequestNumber = ((_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.number) || 0;
+                if (pullRequestNumber) {
+                    const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
+                    const pattern = core.getInput('pattern', { required: true });
+                    const patternMatcher = new pattern_matcher_1.default();
+                    yield patternMatcher.checkChangedFilesAgainstPattern(files, pattern);
                 }
-                files = yield gitHubService.getChangedFilesForPR(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
+                else {
+                    core.setFailed('Pull request number is missing in github event payload');
+                }
             }
             else {
                 core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`);
-                return;
             }
-            const pattern = core.getInput('pattern', { required: true });
-            const patternMatcher = new pattern_matcher_1.default();
-            yield patternMatcher.checkChangedFilesAgainstPattern(files, pattern);
         }
         catch (error) {
             if (error instanceof Error) {
