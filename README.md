@@ -12,7 +12,7 @@ Syntax:
   uses: xalvarez/prevent-file-change-action@v1
   with:
     githubToken: ${{ secrets.GITHUB_TOKEN }}
-    pattern: .*.example
+    pattern: .*\.example
     trustedAuthors: xalvarez
 ```
 
