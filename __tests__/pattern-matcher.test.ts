@@ -1,18 +1,10 @@
 import * as core from '@actions/core'
-import PatternMatcher from '../src/pattern-matcher'
 import {IFile} from '../src/github-service'
+import {checkChangedFilesAgainstPattern} from '../src/pattern-matcher'
 
-let patternMatcher: PatternMatcher
-const coreDebugSpy = jest.fn(() => {})
-const coreSetFailedSpy = jest.fn(() => {})
+jest.mock('@actions/core')
 
 describe('pattern-matcher', () => {
-  beforeEach(() => {
-    jest.spyOn(core, 'debug').mockImplementation(coreDebugSpy)
-    jest.spyOn(core, 'setFailed').mockImplementation(coreSetFailedSpy)
-    patternMatcher = new PatternMatcher()
-  })
-
   afterEach(() => {
     jest.restoreAllMocks()
   })
@@ -21,30 +13,30 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.js'
 
-    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern)
 
-    expect(coreSetFailedSpy).toHaveBeenCalledTimes(1)
-    expect(coreDebugSpy).toHaveBeenCalledTimes(0)
+    expect(core.setFailed).toHaveBeenCalledWith(`There is at least one file matching the pattern ${pattern}`)
+    expect(core.debug).not.toHaveBeenCalled()
   })
 
   it('Should not reject non matching pattern', async () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.ts'
 
-    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern)
 
-    expect(coreSetFailedSpy).toHaveBeenCalledTimes(0)
-    expect(coreDebugSpy).toHaveBeenCalledTimes(1)
+    expect(core.setFailed).not.toHaveBeenCalled()
+    expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)
   })
 
   it('Should not reject empty commit', async () => {
     const files: IFile[] = []
     const pattern = '.*'
 
-    await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern)
 
-    expect(coreSetFailedSpy).toHaveBeenCalledTimes(0)
-    expect(coreDebugSpy).toHaveBeenCalledTimes(1)
+    expect(core.setFailed).not.toHaveBeenCalled()
+    expect(core.debug).toHaveBeenCalledWith(`This commit doesn't contain any files`)
   })
 })
 
