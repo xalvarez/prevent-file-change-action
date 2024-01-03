@@ -1,4 +1,4 @@
 dist/
+jest.config.js
 lib/
 node_modules/
-jest.config.js
