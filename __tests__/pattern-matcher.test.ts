@@ -19,7 +19,7 @@ describe('pattern-matcher', () => {
 
   it('Should reject matching pattern', async () => {
     const files: IFile[] = givenFiles()
-    const pattern: string = '.*.js'
+    const pattern = '.*.js'
 
     await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
@@ -29,7 +29,7 @@ describe('pattern-matcher', () => {
 
   it('Should not reject non matching pattern', async () => {
     const files: IFile[] = givenFiles()
-    const pattern: string = '.*.ts'
+    const pattern = '.*.ts'
 
     await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
@@ -39,7 +39,7 @@ describe('pattern-matcher', () => {
 
   it('Should not reject empty commit', async () => {
     const files: IFile[] = []
-    const pattern: string = '.*'
+    const pattern = '.*'
 
     await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
 
