@@ -1,10 +1,10 @@
 import * as core from '@actions/core'
 import GitHubService, {IFile} from './github-service'
-import PatternMatcher from './pattern-matcher'
 import {context} from '@actions/github'
 import {isTrustedAuthor} from './author-checker'
+import {checkChangedFilesAgainstPattern} from './pattern-matcher'
 
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   try {
     const trustedAuthors: string = core.getInput('trustedAuthors')
     const pullRequestAuthor: string = context.actor
@@ -23,8 +23,7 @@ async function run(): Promise<void> {
           pullRequestNumber
         )
         const pattern: string = core.getInput('pattern', {required: true})
-        const patternMatcher = new PatternMatcher()
-        await patternMatcher.checkChangedFilesAgainstPattern(files, pattern)
+        await checkChangedFilesAgainstPattern(files, pattern)
       } else {
         core.setFailed('Pull request number is missing in github event payload')
       }
@@ -39,5 +38,3 @@ async function run(): Promise<void> {
     }
   }
 }
-
-run()

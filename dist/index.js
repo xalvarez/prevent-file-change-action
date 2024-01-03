@@ -138,11 +138,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_service_1 = __importDefault(__nccwpck_require__(131));
-const pattern_matcher_1 = __importDefault(__nccwpck_require__(2989));
 const github_1 = __nccwpck_require__(5438);
 const author_checker_1 = __nccwpck_require__(9859);
+const pattern_matcher_1 = __nccwpck_require__(2989);
 function run() {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
@@ -161,8 +162,7 @@ function run() {
                 if (pullRequestNumber) {
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
                     const pattern = core.getInput('pattern', { required: true });
-                    const patternMatcher = new pattern_matcher_1.default();
-                    yield patternMatcher.checkChangedFilesAgainstPattern(files, pattern);
+                    yield (0, pattern_matcher_1.checkChangedFilesAgainstPattern)(files, pattern);
                 }
                 else {
                     core.setFailed('Pull request number is missing in github event payload');
@@ -182,7 +182,7 @@ function run() {
         }
     });
 }
-run();
+exports.run = run;
 
 
 /***/ }),
@@ -225,28 +225,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkChangedFilesAgainstPattern = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-class PatternMatcher {
-    checkChangedFilesAgainstPattern(files, pattern) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if ((files === null || files === void 0 ? void 0 : files.length) > 0) {
-                const regExp = new RegExp(pattern);
-                files.some(file => regExp.test(file.filename))
-                    ? yield PatternMatcher.setFailed(pattern)
-                    : core.debug(`There isn't any file matching the pattern ${pattern}`);
-            }
-            else
-                core.debug(`This commit doesn't contain any files`);
-        });
-    }
-    static setFailed(pattern) {
-        return __awaiter(this, void 0, void 0, function* () {
-            core.setFailed(`There is at least one file matching the pattern ${pattern}`);
-            return;
-        });
-    }
+function checkChangedFilesAgainstPattern(files, pattern) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (files.length > 0) {
+            const regExp = new RegExp(pattern);
+            files.some(file => regExp.test(file.filename))
+                ? core.setFailed(`There is at least one file matching the pattern ${pattern}`)
+                : core.debug(`There isn't any file matching the pattern ${pattern}`);
+        }
+        else
+            core.debug(`This commit doesn't contain any files`);
+    });
 }
-exports["default"] = PatternMatcher;
+exports.checkChangedFilesAgainstPattern = checkChangedFilesAgainstPattern;
 
 
 /***/ }),
