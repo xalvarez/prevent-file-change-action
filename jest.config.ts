@@ -1,4 +1,6 @@
-module.exports = {
+import type {Config} from 'jest'
+
+const config: Config = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'node',
@@ -12,5 +14,15 @@ module.exports = {
   coverageReporters: ['json-summary', 'text', 'lcov'],
   collectCoverage: false,
   collectCoverageFrom: ['./src/**'],
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: 100
+    }
+  },
   verbose: true
 }
+
+export default config

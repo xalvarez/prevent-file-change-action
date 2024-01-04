@@ -1,25 +1,25 @@
 import GitHubService, {IFile} from '../src/github-service'
-import {getOctokit} from '@actions/github'
+import * as octokit from '@actions/github'
 
 const GITHUB_TOKEN = 'exampleGitHubToken'
-let gitHubService: GitHubService
+
 jest.mock('@actions/core')
 jest.mock('@actions/github', () => ({
-  getOctokit: jest.fn()
-}))
-const octokitMock = {
-  paginate: jest.fn(),
-  rest: {
-    pulls: {
-      listFiles: jest.fn()
+  getOctokit: jest.fn().mockReturnValue({
+    paginate: jest.fn().mockResolvedValue([{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]),
+    rest: {
+      pulls: {
+        listFiles: jest.fn()
+      }
     }
-  }
-}
+  })
+}))
 
 describe('github-service', () => {
+  let gitHubService: GitHubService
+
   beforeEach(() => {
-    ;(getOctokit as jest.Mock).mockReturnValue(octokitMock)
-    gitHubService = new GitHubService('exampleGitHubToken')
+    gitHubService = new GitHubService(GITHUB_TOKEN)
   })
 
   afterEach(() => {
@@ -31,7 +31,6 @@ describe('github-service', () => {
     const repositoryName = 'exampleRepositoryName'
     const pullRequestNumber = 1
     const expectedFiles = [{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]
-    octokitMock.paginate.mockResolvedValue(expectedFiles)
 
     const changedFiles: IFile[] = await gitHubService.getChangedFiles(
       repositoryOwner,
@@ -39,12 +38,14 @@ describe('github-service', () => {
       pullRequestNumber
     )
 
-    expect(getOctokit).toHaveBeenCalledWith(GITHUB_TOKEN)
-    expect(octokitMock.paginate).toHaveBeenCalledWith(octokitMock.rest.pulls.listFiles, {
-      owner: repositoryOwner,
-      repo: repositoryName,
-      pull_number: pullRequestNumber
-    })
+    expect(octokit.getOctokit(GITHUB_TOKEN).paginate).toHaveBeenCalledWith(
+      octokit.getOctokit(GITHUB_TOKEN).rest.pulls.listFiles,
+      {
+        owner: repositoryOwner,
+        repo: repositoryName,
+        pull_number: pullRequestNumber
+      }
+    )
     expect(changedFiles).toEqual(expectedFiles)
   })
 })
