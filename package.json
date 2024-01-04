@@ -6,12 +6,13 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write src __tests__ *.js *.json",
-    "format-check": "prettier --check src __tests__ *.js *.json",
-    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src __tests__ *.ts *.json",
+    "format-check": "prettier --check src __tests__ *.ts *.json",
+    "lint": "eslint src --ext .ts --fix",
+    "lint-check": "eslint src --ext .ts --max-warnings 0",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run format-check && npm run lint-check && npm run package && npm test"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "js-yaml": "^4.1.0",
     "prettier": "^3.1.1",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }
