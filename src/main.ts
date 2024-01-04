@@ -15,7 +15,7 @@ export async function run(): Promise<void> {
     } else if (eventName === 'pull_request') {
       const githubToken: string = core.getInput('githubToken', {required: true})
       const gitHubService = new GitHubService(githubToken)
-      const pullRequestNumber: number = context.payload?.pull_request?.number || 0
+      const pullRequestNumber: number = context.payload.pull_request?.number || 0
       if (pullRequestNumber) {
         const files: IFile[] = await gitHubService.getChangedFiles(
           context.repo.owner,
