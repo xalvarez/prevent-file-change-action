@@ -17,5 +17,8 @@ be used to share your opinion with the community.
 ## Pull requests
 
 Feel free to create a pull request to suggest changes or fix a bug. If you aren't sure if your changes
-will be accepted, you may want to discuss about them in the
-[discussions section](https://github.com/xalvarez/prevent-file-change-action/discussions) first.
+will be accepted, you may want to discuss them in the [discussions section](https://github.com/xalvarez/prevent-file-change-action/discussions) first.
+
+Make sure to run `npm run all` to regenerate the dist folder, check code style and run all tests.
+You should try to write unit tests that cover your changes as this project aims at 100% test
+coverage.
