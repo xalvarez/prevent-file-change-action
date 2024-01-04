@@ -10,12 +10,16 @@ jest.mock('../src/author-checker')
 
 describe('main', () => {
   let isTrustedAuthorSpy: jest.SpyInstance
+  let getChangedFilesSpy: jest.SpyInstance
 
   beforeEach(() => {
     jest.spyOn(core, 'getInput').mockReturnValue('exampleAuthor1,exampleAuthor2')
     isTrustedAuthorSpy = jest.spyOn(authorChecker, 'isTrustedAuthor').mockResolvedValue(false)
     context.actor = 'exampleAuthor2'
     context.eventName = 'pull_request'
+    getChangedFilesSpy = jest
+      .spyOn(GitHubService.prototype, 'getChangedFiles')
+      .mockResolvedValue([{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}])
   })
 
   it('Should skip checks when author is trusted', async () => {
@@ -24,7 +28,7 @@ describe('main', () => {
     await run()
 
     expect(isTrustedAuthorSpy).toHaveBeenCalledWith('exampleAuthor2', 'exampleAuthor1,exampleAuthor2')
-    expect(GitHubService).not.toHaveBeenCalled()
+    expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
@@ -33,8 +37,17 @@ describe('main', () => {
 
     await run()
 
-    expect(GitHubService).not.toHaveBeenCalled()
+    expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(core.setFailed).toHaveBeenCalledWith('Only pull_request events are supported. Event was: push')
+  })
+
+  it('Should fail when event payload is missing', async () => {
+    context.payload = {}
+
+    await run()
+
+    expect(getChangedFilesSpy).not.toHaveBeenCalled()
+    expect(core.setFailed).toHaveBeenCalledWith('Pull request number is missing in github event payload')
   })
 
   it('Should catch errors of type Error', async () => {
@@ -48,7 +61,7 @@ describe('main', () => {
 
     await run()
 
-    expect(GitHubService).not.toHaveBeenCalled()
+    expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(core.setFailed).toHaveBeenCalledWith(errorMock.message)
   })
 
@@ -62,7 +75,7 @@ describe('main', () => {
 
     await run()
 
-    expect(GitHubService).not.toHaveBeenCalled()
+    expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(core.setFailed).toHaveBeenCalledWith('Unknown error occurred')
   })
 })
