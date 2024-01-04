@@ -12,7 +12,7 @@ const config: Config = {
   },
   coveragePathIgnorePatterns: ['./src/index.ts'],
   coverageReporters: ['json-summary', 'text', 'lcov'],
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: ['./src/**'],
   coverageThreshold: {
     global: {

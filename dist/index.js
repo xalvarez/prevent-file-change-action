@@ -145,7 +145,7 @@ const github_1 = __nccwpck_require__(5438);
 const author_checker_1 = __nccwpck_require__(9859);
 const pattern_matcher_1 = __nccwpck_require__(2989);
 function run() {
-    var _a, _b;
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const trustedAuthors = core.getInput('trustedAuthors');
@@ -158,7 +158,7 @@ function run() {
             else if (eventName === 'pull_request') {
                 const githubToken = core.getInput('githubToken', { required: true });
                 const gitHubService = new github_service_1.default(githubToken);
-                const pullRequestNumber = ((_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.number) || 0;
+                const pullRequestNumber = ((_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) || 0;
                 if (pullRequestNumber) {
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
                     const pattern = core.getInput('pattern', { required: true });
