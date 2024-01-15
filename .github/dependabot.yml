@@ -7,11 +7,14 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         update-types: [ "version-update:semver-major" ]
-    group:
-      name: "npm-dev-dependencies"
-      dependencies:
-        - match:
-            dependency_type: "development"
+    groups:
+      npm-dev-dependencies:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
