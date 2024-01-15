@@ -16,12 +16,20 @@ Syntax:
     trustedAuthors: xalvarez
 ```
 
-Where `pattern` is a valid JavaScript regular expression matching filenames (including path) of files which must not be changed.
-See: [Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+The action has the following inputs:
 
-In the example above, files with `.example` extension won't be allowed to be changed.
+* `githubToken`: (**Required**) The GitHub token used to authenticate with the GitHub API.
+  This is typically the `GITHUB_TOKEN` secret provided by GitHub Actions.
+* `pattern`: (**Required**) A JavaScript [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+  that matches the filenames (including path) of files which must not be changed. For example,
+  `.*\.example` would match any file with the `.example` extension.
+* `trustedAuthors`: (**Optional**) A comma-separated list of GitHub usernames. If a pull request is
+  opened by any of these authors, the action will not fail even if the pull request modifies a file
+  that matches the pattern. This is useful for allowing certain trusted authors to make changes to
+  protected files.
 
-**Note**: This Action supports pull request events only.
+> [!IMPORTANT]
+> This Action supports pull request events only.
 
 ## GITHUB_TOKEN permissions
 
@@ -34,6 +42,9 @@ permissions:
 ```
 
 ## Development
+
+> [!IMPORTANT]
+> This Action requires Node.js 20.
 
 To work on this Action you first need to install npm dependencies:
 
