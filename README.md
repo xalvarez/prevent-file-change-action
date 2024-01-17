@@ -14,6 +14,7 @@ Syntax:
     githubToken: ${{ secrets.GITHUB_TOKEN }}
     pattern: .*\.example
     trustedAuthors: xalvarez
+    allowNewFiles: false
 ```
 
 The action has the following inputs:
@@ -25,8 +26,11 @@ The action has the following inputs:
   `.*\.example` would match any file with the `.example` extension.
 * `trustedAuthors`: (**Optional**) A comma-separated list of GitHub usernames. If a pull request is
   opened by any of these authors, the action will not fail even if the pull request modifies a file
-  that matches the pattern. This is useful for allowing certain trusted authors to make changes to
-  protected files.
+  that matches the pattern.
+* `allowNewFiles`: (**Optional**) A boolean value that determines whether new files that match the
+  pattern should be allowed in the pull request. If set to `true`, the action will not fail even if
+  a new file that matches the pattern is added in the pull request. If not provided or set to
+  `false`, the action will fail if a new file that matches the pattern is added.
 
 > [!IMPORTANT]
 > This Action supports pull request events only.

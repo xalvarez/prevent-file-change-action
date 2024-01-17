@@ -85,7 +85,7 @@ class GitHubService {
             });
             const files = [];
             for (const file of responseBody) {
-                files.push({ filename: file.filename });
+                files.push({ filename: file.filename, status: file.status });
             }
             core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`);
             return files;
@@ -162,7 +162,8 @@ function run() {
                 if (pullRequestNumber) {
                     const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
                     const pattern = core.getInput('pattern', { required: true });
-                    yield (0, pattern_matcher_1.checkChangedFilesAgainstPattern)(files, pattern);
+                    const allowNewFiles = 'true' === core.getInput('allowNewFiles');
+                    yield (0, pattern_matcher_1.checkChangedFilesAgainstPattern)(files, pattern, allowNewFiles);
                 }
                 else {
                     core.setFailed('Pull request number is missing in github event payload');
@@ -227,13 +228,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkChangedFilesAgainstPattern = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-function checkChangedFilesAgainstPattern(files, pattern) {
+function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = false) {
     return __awaiter(this, void 0, void 0, function* () {
         if (files.length > 0) {
             const regExp = new RegExp(pattern);
-            files.some(file => regExp.test(file.filename))
-                ? core.setFailed(`There is at least one file matching the pattern ${pattern}`)
-                : core.debug(`There isn't any file matching the pattern ${pattern}`);
+            const shouldPreventFileChange = files.some(file => {
+                const isPatternMatched = regExp.test(file.filename);
+                if (isPatternMatched && allowNewFiles && file.status === 'added') {
+                    return false;
+                }
+                return isPatternMatched;
+            });
+            if (shouldPreventFileChange) {
+                core.setFailed(`There is at least one file matching the pattern ${pattern}`);
+            }
+            else {
+                core.debug(`There isn't any file matching the pattern ${pattern}`);
+            }
         }
         else
             core.debug(`This commit doesn't contain any files`);
