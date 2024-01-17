@@ -38,8 +38,21 @@ describe('pattern-matcher', () => {
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`This commit doesn't contain any files`)
   })
+
+  it('Should not reject matching added file when allowNewFiles is true', async () => {
+    const files: IFile[] = givenFiles()
+    const pattern = '.*.js'
+
+    await checkChangedFilesAgainstPattern(files, pattern, true)
+
+    expect(core.setFailed).not.toHaveBeenCalled()
+    expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)
+  })
 })
 
 function givenFiles(): IFile[] {
-  return [{filename: 'src/file1.js'}, {filename: 'README.md'}]
+  return [
+    {filename: 'src/file1.js', status: 'added'},
+    {filename: 'README.md', status: 'modified'}
+  ]
 }

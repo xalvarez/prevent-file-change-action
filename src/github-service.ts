@@ -3,6 +3,7 @@ import {getOctokit} from '@actions/github'
 
 export interface IFile {
   filename: string
+  status: string
 }
 
 export default class GitHubService {
@@ -21,7 +22,7 @@ export default class GitHubService {
 
     const files: IFile[] = []
     for (const file of responseBody) {
-      files.push({filename: file.filename} as IFile)
+      files.push({filename: file.filename, status: file.status} as IFile)
     }
 
     core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`)

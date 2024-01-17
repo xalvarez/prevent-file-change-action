@@ -21,7 +21,10 @@ jest.mock('../src/pattern-matcher')
 
 describe('main', () => {
   const trustedAuthors = 'exampleAuthor1,exampleAuthor2'
-  const changedFiles = [{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]
+  const changedFiles = [
+    {filename: 'exampleFile1.md', status: 'added'},
+    {filename: 'exampleFile2.md', status: 'modified'}
+  ]
   const pattern = 'examplePattern'
 
   let isTrustedAuthorSpy: jest.SpyInstance
@@ -62,7 +65,7 @@ describe('main', () => {
     await run()
 
     expect(getChangedFilesSpy).toHaveBeenCalledWith('exampleOwner', 'exampleOwner/exampleRepo', 1)
-    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(changedFiles, pattern)
+    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(changedFiles, pattern, false)
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
