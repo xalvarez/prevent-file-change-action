@@ -8,8 +8,8 @@
     "build": "tsc",
     "format": "prettier --write src __tests__ *.ts *.json",
     "format-check": "prettier --check src __tests__ *.ts *.json",
-    "lint": "eslint src --ext .ts --fix",
-    "lint-check": "eslint src --ext .ts --max-warnings 0",
+    "lint": "eslint src __tests__ --ext .ts --fix",
+    "lint-check": "eslint src __tests__ --ext .ts --max-warnings 0",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format-check && npm run lint-check && npm run package && npm test"

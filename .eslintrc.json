@@ -72,5 +72,13 @@
     "node": true,
     "es6": true,
     "jest/globals": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["__tests__/**/*.ts"],
+      "parserOptions": {
+        "project": "./tsconfig.test.json"
+      }
+    }
+  ]
 }

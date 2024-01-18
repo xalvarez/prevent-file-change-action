@@ -121,6 +121,7 @@ describe('main', () => {
   it('Should catch errors of unknown type', async () => {
     jest.spyOn(core, 'getInput').mockImplementation((inputName: string) => {
       if (inputName === 'githubToken') {
+        // eslint-disable-next-line no-throw-literal
         throw 'Error!'
       }
       return ''
