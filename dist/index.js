@@ -1,260 +1,6 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9859:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isTrustedAuthor = void 0;
-function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (trustedAuthors) {
-            const authors = trustedAuthors.split(',').map((author) => author.trim());
-            return authors.includes(pullRequestAuthor);
-        }
-        else
-            return false;
-    });
-}
-exports.isTrustedAuthor = isTrustedAuthor;
-
-
-/***/ }),
-
-/***/ 131:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __nccwpck_require__(5438);
-class GitHubService {
-    constructor(gitHubToken) {
-        this.octokit = (0, github_1.getOctokit)(gitHubToken);
-    }
-    getChangedFiles(repositoryOwner, repositoryName, pullRequestNumber) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const responseBody = yield this.octokit.paginate(this.octokit.rest.pulls.listFiles, {
-                owner: repositoryOwner,
-                repo: repositoryName,
-                pull_number: pullRequestNumber
-            });
-            const files = [];
-            for (const file of responseBody) {
-                files.push({ filename: file.filename, status: file.status });
-            }
-            core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`);
-            return files;
-        });
-    }
-}
-exports["default"] = GitHubService;
-
-
-/***/ }),
-
-/***/ 3109:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const github_service_1 = __importDefault(__nccwpck_require__(131));
-const github_1 = __nccwpck_require__(5438);
-const author_checker_1 = __nccwpck_require__(9859);
-const pattern_matcher_1 = __nccwpck_require__(2989);
-function run() {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const trustedAuthors = core.getInput('trustedAuthors');
-            const pullRequestAuthor = github_1.context.actor;
-            const eventName = github_1.context.eventName;
-            core.debug(`Event='${eventName}', Author='${pullRequestAuthor}', Trusted Authors='${trustedAuthors}'`);
-            if (yield (0, author_checker_1.isTrustedAuthor)(pullRequestAuthor, trustedAuthors)) {
-                core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`);
-            }
-            else if (eventName === 'pull_request') {
-                const githubToken = core.getInput('githubToken', { required: true });
-                const gitHubService = new github_service_1.default(githubToken);
-                const pullRequestNumber = ((_a = github_1.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) || 0;
-                if (pullRequestNumber) {
-                    const files = yield gitHubService.getChangedFiles(github_1.context.repo.owner, github_1.context.repo.repo, pullRequestNumber);
-                    const pattern = core.getInput('pattern', { required: true });
-                    const allowNewFiles = 'true' === core.getInput('allowNewFiles');
-                    yield (0, pattern_matcher_1.checkChangedFilesAgainstPattern)(files, pattern, allowNewFiles);
-                }
-                else {
-                    core.setFailed('Pull request number is missing in github event payload');
-                }
-            }
-            else {
-                core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`);
-            }
-        }
-        catch (error) {
-            if (error instanceof Error) {
-                core.setFailed(error.message);
-            }
-            else {
-                core.setFailed('Unknown error occurred');
-            }
-        }
-    });
-}
-exports.run = run;
-
-
-/***/ }),
-
-/***/ 2989:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkChangedFilesAgainstPattern = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = false) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (files.length > 0) {
-            const regExp = new RegExp(pattern);
-            const shouldPreventFileChange = files.some(file => {
-                const isPatternMatched = regExp.test(file.filename);
-                if (isPatternMatched && allowNewFiles && file.status === 'added') {
-                    return false;
-                }
-                return isPatternMatched;
-            });
-            if (shouldPreventFileChange) {
-                core.setFailed(`There is at least one file matching the pattern ${pattern}`);
-            }
-            else {
-                core.debug(`There isn't any file matching the pattern ${pattern}`);
-            }
-        }
-        else
-            core.debug(`This commit doesn't contain any files`);
-    });
-}
-exports.checkChangedFilesAgainstPattern = checkChangedFilesAgainstPattern;
-
-
-/***/ }),
-
 /***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -31002,18 +30748,157 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(3109);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "run": () => (/* binding */ run)
+});
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
+;// CONCATENATED MODULE: ./lib/github-service.js
+
+
+class GitHubService {
+    octokit;
+    constructor(gitHubToken) {
+        this.octokit = (0,github.getOctokit)(gitHubToken);
+    }
+    async getChangedFiles(repositoryOwner, repositoryName, pullRequestNumber) {
+        const responseBody = await this.octokit.paginate(this.octokit.rest.pulls.listFiles, {
+            owner: repositoryOwner,
+            repo: repositoryName,
+            pull_number: pullRequestNumber
+        });
+        const files = [];
+        for (const file of responseBody) {
+            files.push({ filename: file.filename, status: file.status });
+        }
+        core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`);
+        return files;
+    }
+}
+
+;// CONCATENATED MODULE: ./lib/author-checker.js
+async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
+    if (trustedAuthors) {
+        const authors = trustedAuthors.split(',').map((author) => author.trim());
+        return authors.includes(pullRequestAuthor);
+    }
+    else
+        return false;
+}
+
+;// CONCATENATED MODULE: ./lib/pattern-matcher.js
+
+async function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = false) {
+    if (files.length > 0) {
+        const regExp = new RegExp(pattern);
+        const shouldPreventFileChange = files.some(file => {
+            const isPatternMatched = regExp.test(file.filename);
+            if (isPatternMatched && allowNewFiles && file.status === 'added') {
+                return false;
+            }
+            return isPatternMatched;
+        });
+        if (shouldPreventFileChange) {
+            core.setFailed(`There is at least one file matching the pattern ${pattern}`);
+        }
+        else {
+            core.debug(`There isn't any file matching the pattern ${pattern}`);
+        }
+    }
+    else
+        core.debug(`This commit doesn't contain any files`);
+}
+
+;// CONCATENATED MODULE: ./lib/main.js
+
+
+
+
+
+async function run() {
+    try {
+        const trustedAuthors = core.getInput('trustedAuthors');
+        const pullRequestAuthor = github.context.actor;
+        const eventName = github.context.eventName;
+        core.debug(`Event='${eventName}', Author='${pullRequestAuthor}', Trusted Authors='${trustedAuthors}'`);
+        if (await isTrustedAuthor(pullRequestAuthor, trustedAuthors)) {
+            core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`);
+        }
+        else if (eventName === 'pull_request') {
+            const githubToken = core.getInput('githubToken', { required: true });
+            const gitHubService = new GitHubService(githubToken);
+            const pullRequestNumber = github.context.payload.pull_request?.number || 0;
+            if (pullRequestNumber) {
+                const files = await gitHubService.getChangedFiles(github.context.repo.owner, github.context.repo.repo, pullRequestNumber);
+                const pattern = core.getInput('pattern', { required: true });
+                const allowNewFiles = 'true' === core.getInput('allowNewFiles');
+                await checkChangedFilesAgainstPattern(files, pattern, allowNewFiles);
+            }
+            else {
+                core.setFailed('Pull request number is missing in github event payload');
+            }
+        }
+        else {
+            core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`);
+        }
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            core.setFailed(error.message);
+        }
+        else {
+            core.setFailed('Unknown error occurred');
+        }
+    }
+}
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map
