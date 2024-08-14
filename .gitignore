@@ -1,13 +1,12 @@
 # Hidden files and folders
 .*
-!.eslintignore
-!.eslintrc.json
 !.gitattributes
 !.github
 !.gitignore
 !.npmrc
 !.prettierignore
 !.prettierrc.json
+!.vscode
 
 # Dependency directory
 node_modules

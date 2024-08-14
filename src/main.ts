@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import GitHubService, {IFile} from './github-service'
 import {context} from '@actions/github'
 import {isTrustedAuthor} from './author-checker'
+import GitHubService, {IFile} from './github-service'
 import {checkChangedFilesAgainstPattern} from './pattern-matcher'
 
 export async function run(): Promise<void> {
