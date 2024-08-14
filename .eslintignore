@@ -1,4 +1,0 @@
-**/*.config.ts
-dist/
-lib/
-node_modules/

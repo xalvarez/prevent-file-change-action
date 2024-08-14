@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import GitHubService from '../src/github-service'
 import {context} from '@actions/github'
 import * as authorChecker from '../src/author-checker'
+import GitHubService from '../src/github-service'
 import {run} from '../src/main'
 import * as patternMatcher from '../src/pattern-matcher'
 
@@ -121,7 +121,6 @@ describe('main', () => {
   it('Should catch errors of unknown type', async () => {
     jest.spyOn(core, 'getInput').mockImplementation((inputName: string) => {
       if (inputName === 'githubToken') {
-        // eslint-disable-next-line no-throw-literal
         throw 'Error!'
       }
       return ''

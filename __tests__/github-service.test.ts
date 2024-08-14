@@ -1,5 +1,5 @@
-import GitHubService, {IFile} from '../src/github-service'
 import * as octokit from '@actions/github'
+import GitHubService, {IFile} from '../src/github-service'
 
 const GITHUB_TOKEN = 'exampleGitHubToken'
 
