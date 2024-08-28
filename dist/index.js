@@ -1902,7 +1902,7 @@ class HttpClient {
         }
         const usingSsl = parsedUrl.protocol === 'https:';
         proxyAgent = new undici_1.ProxyAgent(Object.assign({ uri: proxyUrl.href, pipelining: !this._keepAlive ? 0 : 1 }, ((proxyUrl.username || proxyUrl.password) && {
-            token: `${proxyUrl.username}:${proxyUrl.password}`
+            token: `Basic ${Buffer.from(`${proxyUrl.username}:${proxyUrl.password}`).toString('base64')}`
         })));
         this._proxyAgentDispatcher = proxyAgent;
         if (usingSsl && this._ignoreSslError) {
@@ -2016,11 +2016,11 @@ function getProxyUrl(reqUrl) {
     })();
     if (proxyVar) {
         try {
-            return new URL(proxyVar);
+            return new DecodedURL(proxyVar);
         }
         catch (_a) {
             if (!proxyVar.startsWith('http://') && !proxyVar.startsWith('https://'))
-                return new URL(`http://${proxyVar}`);
+                return new DecodedURL(`http://${proxyVar}`);
         }
     }
     else {
@@ -2078,6 +2078,19 @@ function isLoopbackAddress(host) {
         hostLower.startsWith('127.') ||
         hostLower.startsWith('[::1]') ||
         hostLower.startsWith('[0:0:0:0:0:0:0:1]'));
+}
+class DecodedURL extends URL {
+    constructor(url, base) {
+        super(url, base);
+        this._decodedUsername = decodeURIComponent(super.username);
+        this._decodedPassword = decodeURIComponent(super.password);
+    }
+    get username() {
+        return this._decodedUsername;
+    }
+    get password() {
+        return this._decodedPassword;
+    }
 }
 //# sourceMappingURL=proxy.js.map
 
@@ -31070,23 +31083,6 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -31110,16 +31106,11 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "run": () => (/* binding */ run)
-});
-
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
-;// CONCATENATED MODULE: ./lib/author-checker.js
+;// CONCATENATED MODULE: ./src/author-checker.ts
 async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
     if (trustedAuthors) {
         const authors = trustedAuthors.split(',').map((author) => author.trim());
@@ -31129,7 +31120,7 @@ async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
         return false;
 }
 
-;// CONCATENATED MODULE: ./lib/github-service.js
+;// CONCATENATED MODULE: ./src/github-service.ts
 
 
 class GitHubService {
@@ -31152,7 +31143,7 @@ class GitHubService {
     }
 }
 
-;// CONCATENATED MODULE: ./lib/pattern-matcher.js
+;// CONCATENATED MODULE: ./src/pattern-matcher.ts
 
 async function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = false) {
     if (files.length > 0) {
@@ -31175,7 +31166,7 @@ async function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = f
         core.debug(`This commit doesn't contain any files`);
 }
 
-;// CONCATENATED MODULE: ./lib/main.js
+;// CONCATENATED MODULE: ./src/main.ts
 
 
 
@@ -31217,6 +31208,10 @@ async function run() {
         }
     }
 }
+
+;// CONCATENATED MODULE: ./src/index.ts
+
+run();
 
 })();
 
