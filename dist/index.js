@@ -31070,23 +31070,6 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -31110,16 +31093,11 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "run": () => (/* binding */ run)
-});
-
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
-;// CONCATENATED MODULE: ./lib/author-checker.js
+;// CONCATENATED MODULE: ./src/author-checker.ts
 async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
     if (trustedAuthors) {
         const authors = trustedAuthors.split(',').map((author) => author.trim());
@@ -31129,7 +31107,7 @@ async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
         return false;
 }
 
-;// CONCATENATED MODULE: ./lib/github-service.js
+;// CONCATENATED MODULE: ./src/github-service.ts
 
 
 class GitHubService {
@@ -31152,7 +31130,7 @@ class GitHubService {
     }
 }
 
-;// CONCATENATED MODULE: ./lib/pattern-matcher.js
+;// CONCATENATED MODULE: ./src/pattern-matcher.ts
 
 async function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = false) {
     if (files.length > 0) {
@@ -31175,7 +31153,7 @@ async function checkChangedFilesAgainstPattern(files, pattern, allowNewFiles = f
         core.debug(`This commit doesn't contain any files`);
 }
 
-;// CONCATENATED MODULE: ./lib/main.js
+;// CONCATENATED MODULE: ./src/main.ts
 
 
 
@@ -31217,6 +31195,10 @@ async function run() {
         }
     }
 }
+
+;// CONCATENATED MODULE: ./src/index.ts
+
+run();
 
 })();
 

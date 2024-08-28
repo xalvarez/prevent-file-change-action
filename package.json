@@ -3,14 +3,14 @@
   "version": "1.6.0",
   "private": true,
   "description": "Fail a pull request workflow if certain files are changed",
-  "main": "lib/main.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write src __tests__ *.ts *.json",
     "format-check": "prettier --check src __tests__ *.ts *.json",
     "lint": "eslint --fix",
     "lint-check": "eslint --max-warnings 0",
-    "package": "ncc build --source-map --license licenses.txt",
+    "package": "ncc build src/index.ts -o dist --source-map --license LICENSE",
     "test": "jest",
     "all": "npm run build && npm run format-check && npm run lint-check && npm run package && npm test"
   },
