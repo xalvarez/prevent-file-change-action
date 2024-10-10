@@ -40,7 +40,7 @@ The action has the following inputs:
 > change the pattern or manipulate the protecting workflow otherwise. 
 > 
 > pull_request_target always relies on the action of the target branch. 
-> Please be aware, that the protecting workflow should follow GitHubs security reccomendations for pull_request_target.
+> Please be aware, that the protecting workflow should follow GitHubs security recomendations for pull_request_target.
 > You can find more information in the [docs](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target) 
 > or [this blog post](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/).
 
