@@ -12,7 +12,7 @@ export async function run(): Promise<void> {
     core.debug(`Event='${eventName}', Author='${pullRequestAuthor}', Trusted Authors='${trustedAuthors}'`)
     if (await isTrustedAuthor(pullRequestAuthor, trustedAuthors)) {
       core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`)
-    } else if (eventName === 'pull_request') {
+    } else if (eventName === 'pull_request' || eventName === 'pull_request_target') {
       const githubToken: string = core.getInput('githubToken', {required: true})
       const gitHubService = new GitHubService(githubToken)
       const pullRequestNumber: number = context.payload.pull_request?.number || 0
@@ -29,7 +29,7 @@ export async function run(): Promise<void> {
         core.setFailed('Pull request number is missing in github event payload')
       }
     } else {
-      core.setFailed(`Only pull_request events are supported. Event was: ${eventName}`)
+      core.setFailed(`Only pull_request & pull_request_targets events are supported. Event was: ${eventName}`)
     }
   } catch (error: unknown) {
     if (error instanceof Error) {

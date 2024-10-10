@@ -33,7 +33,16 @@ The action has the following inputs:
   `false`, the action will fail if a new file that matches the pattern is added.
 
 > [!IMPORTANT]
-> This Action supports pull request events only.
+> This Action supports pull_request & pull_request_target events only.
+
+> [!CAUTION]
+> If you are using the pull_request event, users can manipulate your workflow and add themself as trusted authors, 
+> change the pattern or manipulate the protecting workflow otherwise. 
+> 
+> pull_request_target always relies on the action of the target branch. 
+> Please be aware, that the protecting workflow should follow GitHubs security reccomendations for pull_request_target.
+> You can find more information in the [docs](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target) 
+> or [this blog post](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/).
 
 ## GITHUB_TOKEN permissions
 
