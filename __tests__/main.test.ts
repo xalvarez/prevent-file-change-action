@@ -87,7 +87,9 @@ describe('main', () => {
 
     expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(checkChangedFilesAgainstPatternSpy).not.toHaveBeenCalled()
-    expect(core.setFailed).toHaveBeenCalledWith('Only pull_request events are supported. Event was: push')
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'Only pull_request and pull_request_targets events are supported. Event was: push'
+    )
   })
 
   it('Should fail when pull request payload is missing', async () => {

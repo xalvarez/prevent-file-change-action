@@ -29,7 +29,7 @@ export async function run(): Promise<void> {
         core.setFailed('Pull request number is missing in github event payload')
       }
     } else {
-      core.setFailed(`Only pull_request & pull_request_targets events are supported. Event was: ${eventName}`)
+      core.setFailed(`Only pull_request and pull_request_targets events are supported. Event was: ${eventName}`)
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
