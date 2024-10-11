@@ -19,21 +19,30 @@ Syntax:
 
 The action has the following inputs:
 
-* `githubToken`: (**Required**) The GitHub token used to authenticate with the GitHub API.
+- `githubToken`: (**Required**) The GitHub token used to authenticate with the GitHub API.
   This is typically the `GITHUB_TOKEN` secret provided by GitHub Actions.
-* `pattern`: (**Required**) A JavaScript [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
+- `pattern`: (**Required**) A JavaScript [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)
   that matches the filenames (including path) of files which must not be changed. For example,
   `.*\.example` would match any file with the `.example` extension.
-* `trustedAuthors`: (**Optional**) A comma-separated list of GitHub usernames. If a pull request is
+- `trustedAuthors`: (**Optional**) A comma-separated list of GitHub usernames. If a pull request is
   opened by any of these authors, the action will not fail even if the pull request modifies a file
   that matches the pattern.
-* `allowNewFiles`: (**Optional**) A boolean value that determines whether new files that match the
+- `allowNewFiles`: (**Optional**) A boolean value that determines whether new files that match the
   pattern should be allowed in the pull request. If set to `true`, the action will not fail even if
   a new file that matches the pattern is added in the pull request. If not provided or set to
   `false`, the action will fail if a new file that matches the pattern is added.
 
 > [!IMPORTANT]
-> This Action supports pull request events only.
+> This Action supports pull_request and pull_request_target events only.
+
+> [!CAUTION]
+> If you are using the pull_request event, users can manipulate your workflow and add themselves as trusted authors,
+> change the pattern, or manipulate the protecting workflow otherwise.
+>
+> pull_request_target always relies on the action of the target branch.
+> Please be aware that the protecting workflow should follow GitHub's security recommendations for pull_request_target.
+> You can find more information in the [docs](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target)
+> or [this blog post](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/).
 
 ## GITHUB_TOKEN permissions
 
