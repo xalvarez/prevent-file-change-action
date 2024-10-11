@@ -80,7 +80,16 @@ describe('main', () => {
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
-  it('Should fail when event name is not pull_request', async () => {
+  it('Should support pull_request_target event', async () => {
+    context.eventName = 'pull_request_target'
+
+    await run()
+
+    expect(getChangedFilesSpy).toHaveBeenCalled()
+    expect(core.setFailed).not.toHaveBeenCalled()
+  })
+
+  it('Should fail when event name is not pull_request or pull_request_target', async () => {
     context.eventName = 'push'
 
     await run()
