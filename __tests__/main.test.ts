@@ -38,6 +38,8 @@ describe('main', () => {
           return trustedAuthors
         case 'pattern':
           return pattern
+        case 'githubToken':
+          return 'exampleToken'
         default:
           return ''
       }
@@ -65,7 +67,15 @@ describe('main', () => {
     await run()
 
     expect(getChangedFilesSpy).toHaveBeenCalledWith('exampleOwner', 'exampleOwner/exampleRepo', 1)
-    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(changedFiles, pattern, false)
+    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(
+      changedFiles,
+      pattern,
+      'exampleOwner/exampleRepo',
+      'exampleOwner',
+      'exampleToken',
+      1,
+      false
+    )
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
