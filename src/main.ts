@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
 import {isTrustedAuthor} from './author-checker'
-import GitHubService, {IFile} from './github-service'
+import GithubService, {IFile} from './github-service'
 import {checkChangedFilesAgainstPattern} from './pattern-matcher'
 
 export async function run(): Promise<void> {
@@ -19,10 +19,10 @@ export async function run(): Promise<void> {
         )
       }
       const githubToken: string = core.getInput('githubToken', {required: true})
-      const gitHubService = new GitHubService(githubToken)
+      const githubService = new GithubService(githubToken)
       const pullRequestNumber: number = context.payload.pull_request?.number || 0
       if (pullRequestNumber) {
-        const files: IFile[] = await gitHubService.getChangedFiles(
+        const files: IFile[] = await githubService.getChangedFiles(
           context.repo.owner,
           context.repo.repo,
           pullRequestNumber
