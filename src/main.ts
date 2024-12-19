@@ -29,7 +29,15 @@ export async function run(): Promise<void> {
         )
         const pattern: string = core.getInput('pattern', {required: true})
         const allowNewFiles: boolean = 'true' === core.getInput('allowNewFiles')
-        await checkChangedFilesAgainstPattern(files, pattern, allowNewFiles)
+        await checkChangedFilesAgainstPattern(
+          files,
+          pattern,
+          context.repo.repo,
+          context.repo.owner,
+          githubToken,
+          pullRequestNumber,
+          allowNewFiles
+        )
       } else {
         core.setFailed('Pull request number is missing in github event payload')
       }
