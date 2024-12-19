@@ -13,7 +13,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.js'
 
-    await checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern, 'exampleRepo', 'exampleOwner', 'exampleToken', 1)
 
     expect(core.setFailed).toHaveBeenCalledWith(`There is at least one file matching the pattern ${pattern}`)
     expect(core.debug).not.toHaveBeenCalled()
@@ -23,7 +23,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.ts'
 
-    await checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern, 'exampleRepo', 'exampleOwner', 'exampleToken', 1)
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)
@@ -33,7 +33,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = []
     const pattern = '.*'
 
-    await checkChangedFilesAgainstPattern(files, pattern)
+    await checkChangedFilesAgainstPattern(files, pattern, 'exampleRepo', 'exampleOwner', 'exampleToken', 1)
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`This commit doesn't contain any files`)
@@ -43,7 +43,7 @@ describe('pattern-matcher', () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.js'
 
-    await checkChangedFilesAgainstPattern(files, pattern, true)
+    await checkChangedFilesAgainstPattern(files, pattern, 'exampleRepo', 'exampleOwner', 'exampleToken', 1, true)
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)

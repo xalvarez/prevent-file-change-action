@@ -17,6 +17,9 @@ inputs:
   allowNewFiles:
     required: false
     description: 'Allow matching files to be included in pull requests'
+  closePR:
+    required: false
+    description: 'Close pull request if it finds a match'
 runs:
   using: 'node20'
   main: 'dist/index.js'
