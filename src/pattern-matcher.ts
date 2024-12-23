@@ -1,9 +1,14 @@
 import * as core from '@actions/core'
-import {IFile} from './github-service'
+import GitHubService, {IFile} from './github-service'
 
 export async function checkChangedFilesAgainstPattern(
   files: IFile[],
   pattern: string,
+  githubService: GitHubService,
+  repo: string,
+  owner: string,
+  pullRequestNumber: number,
+  closePR: boolean,
   allowNewFiles = false
 ): Promise<void> {
   if (files.length > 0) {
@@ -15,9 +20,12 @@ export async function checkChangedFilesAgainstPattern(
       }
       return isPatternMatched
     })
-
     if (shouldPreventFileChange) {
-      core.setFailed(`There is at least one file matching the pattern ${pattern}`)
+      if (closePR) {
+        await githubService.closePullRequest(owner, repo, pullRequestNumber)
+      } else {
+        core.setFailed(`There is at least one file matching the pattern ${pattern}`)
+      }
     } else {
       core.debug(`There isn't any file matching the pattern ${pattern}`)
     }
