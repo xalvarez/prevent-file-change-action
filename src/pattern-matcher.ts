@@ -1,10 +1,10 @@
 import * as core from '@actions/core'
-import GithubService, {IFile} from './github-service'
+import GitHubService, {IFile} from './github-service'
 
 export async function checkChangedFilesAgainstPattern(
   files: IFile[],
   pattern: string,
-  githubService: GithubService,
+  githubService: GitHubService,
   repo: string,
   owner: string,
   pullRequestNumber: number,

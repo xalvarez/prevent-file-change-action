@@ -6,7 +6,7 @@ export interface IFile {
   status: string
 }
 
-export default class GithubService {
+export default class GitHubService {
   private readonly octokit
 
   constructor(gitHubToken: string) {
