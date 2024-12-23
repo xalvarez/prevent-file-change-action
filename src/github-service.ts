@@ -29,4 +29,13 @@ export default class GithubService {
 
     return files
   }
+
+  async closePullRequest(owner: string, repo: string, pullRequestNumber: number): Promise<void> {
+    await this.octokit.rest.pulls.update({
+      owner: owner,
+      repo: repo,
+      pull_number: pullRequestNumber,
+      state: 'closed'
+    })
+  }
 }

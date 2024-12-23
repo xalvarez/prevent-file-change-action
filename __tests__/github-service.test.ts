@@ -9,7 +9,8 @@ jest.mock('@actions/github', () => ({
     paginate: jest.fn().mockResolvedValue([{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]),
     rest: {
       pulls: {
-        listFiles: jest.fn()
+        listFiles: jest.fn(),
+        update: jest.fn()
       }
     }
   })
@@ -47,5 +48,20 @@ describe('github-service', () => {
       }
     )
     expect(changedFiles).toEqual(expectedFiles)
+  })
+
+  it('Should close pull request', async () => {
+    const owner = 'exampleOwner'
+    const repo = 'exampleRepo'
+    const pullRequestNumber = 1
+
+    await gitHubService.closePullRequest(owner, repo, pullRequestNumber)
+
+    expect(octokit.getOctokit(GITHUB_TOKEN).rest.pulls.update).toHaveBeenCalledWith({
+      owner: owner,
+      repo: repo,
+      pull_number: pullRequestNumber,
+      state: 'closed'
+    })
   })
 })

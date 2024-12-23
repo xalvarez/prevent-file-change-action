@@ -46,7 +46,6 @@ describe('main', () => {
     })
 
     isTrustedAuthorSpy = jest.spyOn(authorChecker, 'isTrustedAuthor').mockResolvedValue(false)
-
     context.eventName = 'pull_request'
     context.payload = {
       pull_request: {
@@ -70,10 +69,11 @@ describe('main', () => {
     expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(
       changedFiles,
       pattern,
+      expect.any(GitHubService),
       'exampleOwner/exampleRepo',
       'exampleOwner',
-      'exampleToken',
       1,
+      false,
       false
     )
     expect(core.setFailed).not.toHaveBeenCalled()
