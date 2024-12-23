@@ -31832,7 +31832,7 @@ async function isTrustedAuthor(pullRequestAuthor, trustedAuthors) {
 ;// CONCATENATED MODULE: ./src/github-service.ts
 
 
-class GithubService {
+class GitHubService {
     octokit;
     constructor(gitHubToken) {
         this.octokit = (0,github.getOctokit)(gitHubToken);
@@ -31908,14 +31908,14 @@ async function run() {
                 core.warning("pull_request support is deprecated because it allows bypassing this action's checks when modifying the corresponding workflow within a pull request. Please switch to pull_request_target.");
             }
             const githubToken = core.getInput('githubToken', { required: true });
-            const githubService = new GithubService(githubToken);
+            const gitHubService = new GitHubService(githubToken);
             const pullRequestNumber = github.context.payload.pull_request?.number || 0;
             if (pullRequestNumber) {
-                const files = await githubService.getChangedFiles(github.context.repo.owner, github.context.repo.repo, pullRequestNumber);
+                const files = await gitHubService.getChangedFiles(github.context.repo.owner, github.context.repo.repo, pullRequestNumber);
                 const pattern = core.getInput('pattern', { required: true });
                 const allowNewFiles = 'true' === core.getInput('allowNewFiles');
                 const closePR = core.getInput('closePR') === 'true';
-                await checkChangedFilesAgainstPattern(files, pattern, githubService, github.context.repo.repo, github.context.repo.owner, pullRequestNumber, closePR, allowNewFiles);
+                await checkChangedFilesAgainstPattern(files, pattern, gitHubService, github.context.repo.repo, github.context.repo.owner, pullRequestNumber, closePR, allowNewFiles);
             }
             else {
                 core.setFailed('Pull request number is missing in github event payload');
