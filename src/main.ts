@@ -29,13 +29,15 @@ export async function run(): Promise<void> {
         )
         const pattern: string = core.getInput('pattern', {required: true})
         const allowNewFiles: boolean = 'true' === core.getInput('allowNewFiles')
+        const closePR: boolean = core.getInput('closePR') === 'true'
         await checkChangedFilesAgainstPattern(
           files,
           pattern,
+          githubService,
           context.repo.repo,
           context.repo.owner,
-          githubToken,
           pullRequestNumber,
+          closePR,
           allowNewFiles
         )
       } else {

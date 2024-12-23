@@ -31850,12 +31850,19 @@ class GithubService {
         core.debug(`Pull request ${pullRequestNumber} includes following files: ${JSON.stringify(files)}`);
         return files;
     }
+    async closePullRequest(owner, repo, pullRequestNumber) {
+        await this.octokit.rest.pulls.update({
+            owner: owner,
+            repo: repo,
+            pull_number: pullRequestNumber,
+            state: 'closed'
+        });
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/pattern-matcher.ts
 
-
-async function checkChangedFilesAgainstPattern(files, pattern, repo, owner, token, pullRequestNumber, allowNewFiles = false) {
+async function checkChangedFilesAgainstPattern(files, pattern, githubService, repo, owner, pullRequestNumber, closePR, allowNewFiles = false) {
     if (files.length > 0) {
         const regExp = new RegExp(pattern);
         const shouldPreventFileChange = files.some(file => {
@@ -31866,17 +31873,8 @@ async function checkChangedFilesAgainstPattern(files, pattern, repo, owner, toke
             return isPatternMatched;
         });
         if (shouldPreventFileChange) {
-            const closePR = core.getInput('closePR') === 'true';
             if (closePR) {
-                const octokit = github.getOctokit(token);
-                const response = await octokit.rest.pulls.update({
-                    owner,
-                    repo,
-                    pull_number: pullRequestNumber,
-                    state: 'closed'
-                });
-                core.info(`Pull request #${pullRequestNumber} has been successfully closed.`);
-                core.info(`Response: ${JSON.stringify(response.data)}`);
+                await githubService.closePullRequest(owner, repo, pullRequestNumber);
             }
             else {
                 core.setFailed(`There is at least one file matching the pattern ${pattern}`);
@@ -31916,7 +31914,8 @@ async function run() {
                 const files = await githubService.getChangedFiles(github.context.repo.owner, github.context.repo.repo, pullRequestNumber);
                 const pattern = core.getInput('pattern', { required: true });
                 const allowNewFiles = 'true' === core.getInput('allowNewFiles');
-                await checkChangedFilesAgainstPattern(files, pattern, github.context.repo.repo, github.context.repo.owner, githubToken, pullRequestNumber, allowNewFiles);
+                const closePR = core.getInput('closePR') === 'true';
+                await checkChangedFilesAgainstPattern(files, pattern, githubService, github.context.repo.repo, github.context.repo.owner, pullRequestNumber, closePR, allowNewFiles);
             }
             else {
                 core.setFailed('Pull request number is missing in github event payload');

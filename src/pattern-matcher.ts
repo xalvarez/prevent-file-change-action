@@ -1,14 +1,14 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
-import {IFile} from './github-service'
+import GithubService, {IFile} from './github-service'
 
 export async function checkChangedFilesAgainstPattern(
   files: IFile[],
   pattern: string,
+  githubService: GithubService,
   repo: string,
   owner: string,
-  token: string,
   pullRequestNumber: number,
+  closePR: boolean,
   allowNewFiles = false
 ): Promise<void> {
   if (files.length > 0) {
@@ -20,19 +20,9 @@ export async function checkChangedFilesAgainstPattern(
       }
       return isPatternMatched
     })
-
     if (shouldPreventFileChange) {
-      const closePR: boolean = core.getInput('closePR') === 'true'
       if (closePR) {
-        const octokit = github.getOctokit(token)
-        const response = await octokit.rest.pulls.update({
-          owner,
-          repo,
-          pull_number: pullRequestNumber,
-          state: 'closed'
-        })
-        core.info(`Pull request #${pullRequestNumber} has been successfully closed.`)
-        core.info(`Response: ${JSON.stringify(response.data)}`)
+        await githubService.closePullRequest(owner, repo, pullRequestNumber)
       } else {
         core.setFailed(`There is at least one file matching the pattern ${pattern}`)
       }
