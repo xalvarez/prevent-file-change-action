@@ -9,8 +9,11 @@ jest.mock('../src/github-service')
 
 describe('pattern-matcher', () => {
   let gitHubService: GitHubService
+  let closePullRequestSpy: jest.SpyInstance
+
   beforeEach(() => {
     gitHubService = new GitHubService(GITHUB_TOKEN)
+    closePullRequestSpy = jest.spyOn(GitHubService.prototype, 'closePullRequest').mockResolvedValue()
   })
   afterEach(() => {
     jest.restoreAllMocks()
@@ -24,6 +27,7 @@ describe('pattern-matcher', () => {
 
     expect(core.setFailed).toHaveBeenCalledWith(`There is at least one file matching the pattern ${pattern}`)
     expect(core.debug).not.toHaveBeenCalled()
+    expect(closePullRequestSpy).not.toHaveBeenCalled()
   })
 
   it('Should not reject non matching pattern', async () => {
@@ -34,6 +38,7 @@ describe('pattern-matcher', () => {
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)
+    expect(closePullRequestSpy).not.toHaveBeenCalled()
   })
 
   it('Should not reject empty commit', async () => {
@@ -44,6 +49,7 @@ describe('pattern-matcher', () => {
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`This commit doesn't contain any files`)
+    expect(closePullRequestSpy).not.toHaveBeenCalled()
   })
 
   it('Should not reject matching added file when allowNewFiles is true', async () => {
@@ -54,24 +60,16 @@ describe('pattern-matcher', () => {
 
     expect(core.setFailed).not.toHaveBeenCalled()
     expect(core.debug).toHaveBeenCalledWith(`There isn't any file matching the pattern ${pattern}`)
+    expect(closePullRequestSpy).not.toHaveBeenCalled()
   })
   it('Should close PR', async () => {
     const files: IFile[] = givenFiles()
     const pattern = '.*.js'
-    jest.spyOn(core, 'getInput').mockImplementation((inputName: string) => {
-      switch (inputName) {
-        case 'githubToken':
-          return 'exampleToken'
-        case 'closePR':
-          return 'true'
-        default:
-          return ''
-      }
-    })
-    const closePullRequest = jest.spyOn(GitHubService.prototype, 'closePullRequest').mockResolvedValue()
+
     await checkChangedFilesAgainstPattern(files, pattern, gitHubService, 'exampleRepo', 'exampleOwner', 1, true)
+
     expect(core.setFailed).not.toHaveBeenCalled()
-    expect(closePullRequest).toHaveBeenCalledWith('exampleOwner', 'exampleRepo', 1)
+    expect(closePullRequestSpy).toHaveBeenCalledWith('exampleOwner', 'exampleRepo', 1)
   })
 })
 
