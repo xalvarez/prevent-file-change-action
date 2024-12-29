@@ -31,6 +31,9 @@ The action has the following inputs:
   pattern should be allowed in the pull request. If set to `true`, the action will not fail even if
   a new file that matches the pattern is added in the pull request. If not provided or set to
   `false`, the action will fail if a new file that matches the pattern is added.
+- `closePR`: (**Optional**) A boolean value that determines whether the pull request should be closed
+  if a pattern match is found. If set to `true`, the action will close the pull request instead of failing.
+  If not provided or set to `false`, the action will fail if a pattern match is found.
 
 > [!IMPORTANT]
 > This Action supports pull_request and pull_request_target events only.
