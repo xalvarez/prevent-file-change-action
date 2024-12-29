@@ -38,13 +38,14 @@ describe('main', () => {
           return trustedAuthors
         case 'pattern':
           return pattern
+        case 'githubToken':
+          return 'exampleToken'
         default:
           return ''
       }
     })
 
     isTrustedAuthorSpy = jest.spyOn(authorChecker, 'isTrustedAuthor').mockResolvedValue(false)
-
     context.eventName = 'pull_request'
     context.payload = {
       pull_request: {
@@ -65,7 +66,16 @@ describe('main', () => {
     await run()
 
     expect(getChangedFilesSpy).toHaveBeenCalledWith('exampleOwner', 'exampleOwner/exampleRepo', 1)
-    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(changedFiles, pattern, false)
+    expect(checkChangedFilesAgainstPatternSpy).toHaveBeenCalledWith(
+      changedFiles,
+      pattern,
+      expect.any(GitHubService),
+      'exampleOwner/exampleRepo',
+      'exampleOwner',
+      1,
+      false,
+      false
+    )
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
