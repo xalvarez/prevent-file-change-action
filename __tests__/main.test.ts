@@ -46,7 +46,7 @@ describe('main', () => {
     })
 
     isTrustedAuthorSpy = jest.spyOn(authorChecker, 'isTrustedAuthor').mockResolvedValue(false)
-    context.eventName = 'pull_request'
+    context.eventName = 'pull_request_target'
     context.payload = {
       pull_request: {
         number: 1
@@ -90,25 +90,14 @@ describe('main', () => {
     expect(core.setFailed).not.toHaveBeenCalled()
   })
 
-  it('Should support pull_request_target event', async () => {
-    context.eventName = 'pull_request_target'
-
-    await run()
-
-    expect(getChangedFilesSpy).toHaveBeenCalled()
-    expect(core.setFailed).not.toHaveBeenCalled()
-  })
-
-  it('Should fail when event name is not pull_request or pull_request_target', async () => {
+  it('Should fail when event name is not pull_request_target', async () => {
     context.eventName = 'push'
 
     await run()
 
     expect(getChangedFilesSpy).not.toHaveBeenCalled()
     expect(checkChangedFilesAgainstPatternSpy).not.toHaveBeenCalled()
-    expect(core.setFailed).toHaveBeenCalledWith(
-      'Only pull_request and pull_request_targets events are supported. Event was: push'
-    )
+    expect(core.setFailed).toHaveBeenCalledWith('Only pull_request_target events are supported. Event was: push')
   })
 
   it('Should fail when pull request payload is missing', async () => {

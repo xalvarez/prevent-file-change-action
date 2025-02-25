@@ -12,6 +12,7 @@
     "lint-check": "eslint --max-warnings 0",
     "package": "ncc build src/index.ts -o dist --source-map --license LICENSE",
     "test": "jest",
+    "test-watch": "jest --watchAll",
     "all": "npm run build && npm run format-check && npm run lint-check && npm run package && npm test"
   },
   "repository": {
