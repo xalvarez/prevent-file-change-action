@@ -1,21 +1,21 @@
-import js from '@eslint/js'
-import jest from 'eslint-plugin-jest'
-import prettier from 'eslint-plugin-prettier/recommended'
-import ts from 'typescript-eslint'
+import eslint from '@eslint/js'
+import pluginJest from 'eslint-plugin-jest'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import tseslint from 'typescript-eslint'
 
-export default [
+export default tseslint.config(
   {
     ignores: ['coverage', 'dist', 'lib']
   },
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  ...[jest.configs['flat/recommended']],
-  ...[prettier],
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  eslintPluginPrettierRecommended,
   {
+    plugins: {jest: pluginJest},
     languageOptions: {
       parserOptions: {
         ecmaVersion: 'latest'
       }
     }
   }
-]
+)
