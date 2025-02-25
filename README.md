@@ -9,7 +9,7 @@ Syntax:
 
 ```
 - name: Prevent file change
-  uses: xalvarez/prevent-file-change-action@v1
+  uses: xalvarez/prevent-file-change-action@v2
   with:
     githubToken: ${{ secrets.GITHUB_TOKEN }}
     pattern: .*\.example
