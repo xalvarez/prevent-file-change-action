@@ -31918,10 +31918,7 @@ async function run() {
         if (await isTrustedAuthor(pullRequestAuthor, trustedAuthors)) {
             core.info(`${pullRequestAuthor} is a trusted author and is allowed to modify any matching files.`);
         }
-        else if (eventName === 'pull_request' || eventName === 'pull_request_target') {
-            if (eventName === 'pull_request') {
-                core.warning("pull_request support is deprecated because it allows bypassing this action's checks when modifying the corresponding workflow within a pull request. Please switch to pull_request_target.");
-            }
+        else if (eventName === 'pull_request_target') {
             const githubToken = core.getInput('githubToken', { required: true });
             const gitHubService = new GitHubService(githubToken);
             const pullRequestNumber = github.context.payload.pull_request?.number || 0;
@@ -31937,7 +31934,7 @@ async function run() {
             }
         }
         else {
-            core.setFailed(`Only pull_request and pull_request_targets events are supported. Event was: ${eventName}`);
+            core.setFailed(`Only pull_request_target events are supported. Event was: ${eventName}`);
         }
     }
     catch (error) {
