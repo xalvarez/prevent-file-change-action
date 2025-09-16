@@ -35,7 +35,7 @@
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^20.19.14",
+    "@types/node": "^20.19.15",
     "@vercel/ncc": "^0.38.3",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
@@ -45,9 +45,9 @@
     "jest-circus": "^29.7.0",
     "js-yaml": "^4.1.0",
     "prettier": "^3.6.2",
-    "ts-jest": "^29.4.1",
+    "ts-jest": "^29.4.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.43.0"
+    "typescript-eslint": "^8.44.0"
   }
 }
