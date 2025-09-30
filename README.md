@@ -9,7 +9,7 @@ Syntax:
 
 ```
 - name: Prevent file change
-  uses: xalvarez/prevent-file-change-action@v2
+  uses: xalvarez/prevent-file-change-action@v3
   with:
     githubToken: ${{ secrets.GITHUB_TOKEN }}
     pattern: .*\.example
@@ -56,7 +56,7 @@ permissions:
 ## Development
 
 > [!IMPORTANT]
-> This Action requires Node.js 20.
+> This Action requires Node.js 24.
 
 To work on this Action you first need to install npm dependencies:
 
