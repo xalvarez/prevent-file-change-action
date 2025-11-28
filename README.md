@@ -1,5 +1,8 @@
 # Prevent file change action
 
+> [!WARNING]
+> For security reasons Actions are currently disabled!
+
 [![CodeQL](https://github.com/xalvarez/prevent-file-change-action/actions/workflows/codeql-analysis.yml/badge.svg?event=push)](https://github.com/xalvarez/prevent-file-change-action/actions/workflows/codeql-analysis.yml)
 
 **prevent-file-change-action** is a GitHub Action which allows you to force a workflow fail if
