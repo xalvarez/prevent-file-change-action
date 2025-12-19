@@ -17,6 +17,28 @@ Syntax:
     allowNewFiles: false
 ```
 
+Complete example:
+
+```
+name: Prevent file change
+
+on:
+  pull_request_target:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Prevent file from being modified
+        uses: xalvarez/prevent-file-change-action@v3.0.0
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          pattern: .*hello.world
+```
+
 The action has the following inputs:
 
 - `githubToken`: (**Required**) The GitHub token used to authenticate with the GitHub API.
