@@ -1,11 +1,8 @@
 name: 'build-test'
+
 on:
   pull_request_target:
-    branches:
-      - main
-
-permissions:
-  pull-requests: read
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -26,6 +23,8 @@ jobs:
         run: npm run all
   test:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - name: Clone git repository
         uses: actions/checkout@v6.0.1
