@@ -6,6 +6,7 @@
 !.npmrc
 !.prettierignore
 !.prettierrc.json
+!.tool-versions
 !.vscode
 
 # Dependency directory
