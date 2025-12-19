@@ -27,7 +27,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  prevent-file-change:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
