@@ -5,6 +5,21 @@ import {checkChangedFilesAgainstPattern} from '../src/pattern-matcher'
 const GITHUB_TOKEN = 'exampleGitHubToken'
 
 jest.mock('@actions/core')
+jest.mock(
+  '@actions/github',
+  () => ({
+    getOctokit: jest.fn().mockReturnValue({
+      paginate: jest.fn().mockResolvedValue([]),
+      rest: {
+        pulls: {
+          listFiles: jest.fn(),
+          update: jest.fn()
+        }
+      }
+    })
+  }),
+  {virtual: true}
+)
 jest.mock('../src/github-service')
 
 describe('pattern-matcher', () => {

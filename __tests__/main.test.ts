@@ -6,15 +6,19 @@ import {run} from '../src/main'
 import * as patternMatcher from '../src/pattern-matcher'
 
 jest.mock('@actions/core')
-jest.mock('@actions/github', () => ({
-  context: {
-    actor: 'exampleAuthor2',
-    repo: {
-      owner: 'exampleOwner',
-      repo: 'exampleOwner/exampleRepo'
+jest.mock(
+  '@actions/github',
+  () => ({
+    context: {
+      actor: 'exampleAuthor2',
+      repo: {
+        owner: 'exampleOwner',
+        repo: 'exampleOwner/exampleRepo'
+      }
     }
-  }
-}))
+  }),
+  {virtual: true}
+)
 jest.mock('../src/github-service')
 jest.mock('../src/author-checker')
 jest.mock('../src/pattern-matcher')

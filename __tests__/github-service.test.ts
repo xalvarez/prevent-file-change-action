@@ -4,17 +4,24 @@ import GitHubService, {IFile} from '../src/github-service'
 const GITHUB_TOKEN = 'exampleGitHubToken'
 
 jest.mock('@actions/core')
-jest.mock('@actions/github', () => ({
-  getOctokit: jest.fn().mockReturnValue({
-    paginate: jest.fn().mockResolvedValue([{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]),
-    rest: {
-      pulls: {
-        listFiles: jest.fn(),
-        update: jest.fn()
+jest.mock(
+  '@actions/github',
+  () => ({
+    getOctokit: jest.fn().mockReturnValue({
+      paginate: jest.fn().mockResolvedValue([
+        {filename: 'exampleFile1.md', status: 'added'},
+        {filename: 'exampleFile2.md', status: 'modified'}
+      ]),
+      rest: {
+        pulls: {
+          listFiles: jest.fn(),
+          update: jest.fn()
+        }
       }
-    }
-  })
-}))
+    })
+  }),
+  {virtual: true}
+)
 
 describe('github-service', () => {
   let gitHubService: GitHubService
@@ -31,7 +38,10 @@ describe('github-service', () => {
     const repositoryOwner = 'exampleRepositoryOwner'
     const repositoryName = 'exampleRepositoryName'
     const pullRequestNumber = 1
-    const expectedFiles = [{filename: 'exampleFile1.md'}, {filename: 'exampleFile2.md'}]
+    const expectedFiles = [
+      {filename: 'exampleFile1.md', status: 'added'},
+      {filename: 'exampleFile2.md', status: 'modified'}
+    ]
 
     const changedFiles: IFile[] = await gitHubService.getChangedFiles(
       repositoryOwner,
