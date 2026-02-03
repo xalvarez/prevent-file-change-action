@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {context} from '@actions/github'
+import * as github from '@actions/github'
 import {isTrustedAuthor} from './author-checker'
 import GitHubService, {IFile} from './github-service'
 import {checkChangedFilesAgainstPattern} from './pattern-matcher'
@@ -7,6 +7,7 @@ import {checkChangedFilesAgainstPattern} from './pattern-matcher'
 export async function run(): Promise<void> {
   try {
     const trustedAuthors: string = core.getInput('trustedAuthors')
+    const context = github.context
     const pullRequestAuthor: string = context.actor
     const eventName: string = context.eventName
     core.debug(`Event='${eventName}', Author='${pullRequestAuthor}', Trusted Authors='${trustedAuthors}'`)

@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {getOctokit} from '@actions/github'
+import * as github from '@actions/github'
 
 export interface IFile {
   filename: string
@@ -10,7 +10,7 @@ export default class GitHubService {
   private readonly octokit
 
   constructor(gitHubToken: string) {
-    this.octokit = getOctokit(gitHubToken)
+    this.octokit = github.getOctokit(gitHubToken)
   }
 
   async getChangedFiles(repositoryOwner: string, repositoryName: string, pullRequestNumber: number): Promise<IFile[]> {
