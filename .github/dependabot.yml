@@ -7,11 +7,14 @@ updates:
     ignore:
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@actions/core'
+        update-types: ['version-update:semver-major']
     groups:
       eslint:
         patterns:
-          - '@eslint/js'
-          - 'eslint'
+          - '*eslint*'
       npm-dev:
         dependency-type: 'development'
         patterns:
