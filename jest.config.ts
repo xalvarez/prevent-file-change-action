@@ -8,7 +8,7 @@ const config: Config = {
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   testRunner: 'jest-circus/runner',
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.ts$': ['ts-jest', {tsconfig: 'tsconfig.test.json'}]
   },
   coveragePathIgnorePatterns: ['./src/index.ts'],
   coverageReporters: ['json-summary', 'text', 'lcov'],
