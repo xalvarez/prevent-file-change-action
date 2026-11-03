@@ -1,7 +1,7 @@
 name: 'build-test'
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Clone git repository
         uses: actions/checkout@v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Set up Node.js
         uses: actions/setup-node@v7.1.0
         with:
@@ -28,12 +26,11 @@ jobs:
     steps:
       - name: Clone git repository
         uses: actions/checkout@v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      # The action only accepts pull_request_target; override the event name to smoke-test it safely under pull_request.
       - name: Run action locally
-        uses: ./
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          pattern: .*example
-          trustedAuthors: xalvarez
-          allowNewFiles: false
+        run: GITHUB_EVENT_NAME=pull_request_target node dist/index.js
+        env:
+          INPUT_GITHUBTOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_PATTERN: .*example
+          INPUT_TRUSTEDAUTHORS: xalvarez
+          INPUT_ALLOWNEWFILES: 'false'
