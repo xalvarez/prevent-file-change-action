@@ -39,6 +39,8 @@ jobs:
           pattern: .*hello.world
 ```
 
+No `actions/checkout` step is needed: the Action reads the changed files through the GitHub API.
+
 The action has the following inputs:
 
 - `githubToken`: (**Required**) The GitHub token used to authenticate with the GitHub API.
@@ -58,12 +60,49 @@ The action has the following inputs:
   If not provided or set to `false`, the action will fail if a pattern match is found.
 
 > [!IMPORTANT]
-> This Action supports `pull_request_target` events exclusively. Supporting `pull_request` events would enable users to
-> manipulate the workflow by potentially adding themselves as trusted authors, modifying the pattern, or otherwise
-> compromising the protective workflow. Please ensure that your protective workflow adheres to GitHub's security
-> recommendations for `pull_request_target`. For more detailed information, refer to the
-> [official documentation](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target)
-> or this [security blog post](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/).
+> This Action supports `pull_request_target` events exclusively. See
+> [Why `pull_request_target`?](#why-pull_request_target) for details.
+
+## Why `pull_request_target`?
+
+With `pull_request`, GitHub runs the workflow file from the pull request's merge commit. A pull request could therefore
+edit the protective workflow itself, for example by adding its author to `trustedAuthors`, changing `pattern`, or
+replacing the step with one that always passes, and the check would still report success.
+
+With `pull_request_target`, the workflow file is always taken from the default branch, so a pull request cannot alter
+it. This Action uses that context safely: it never checks out or executes code from the pull request. It only reads the
+list of changed files through the GitHub API.
+
+> [!CAUTION]
+> Do not add steps that check out or run pull request code (for example `actions/checkout` with
+> `ref: ${{ github.event.pull_request.head.sha }}`) to the same workflow. See
+> [Securely using `pull_request_target`](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target)
+> and [Preventing pwn requests](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/).
+
+## Allowing `pull_request_target` in public repositories
+
+> [!WARNING]
+> Starting **December 2, 2026**, GitHub blocks `pull_request_target` events by default in **public** repositories,
+> unless an applicable Actions event policy explicitly allows them. Blocked runs fail with an error annotation, so a
+> required check using this Action will block merging until the event is allowed. Temporary brownouts take place on
+> **November 9, 2026** and **November 16, 2026**, 16:00–18:00 UTC. Private and internal repositories aren't affected.
+> See the [GitHub changelog](https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2/).
+
+To keep this Action working, allow `pull_request_target` only for the workflow file that uses it:
+
+1. In your repository (or organization), click **Settings**.
+2. In the left sidebar, under **Actions**, click **Policies**.
+3. Create a new policy and give it a name, for example `Allow prevent-file-change`.
+4. Target only the workflow file that uses this Action, for example `.github/workflows/prevent-file-change.yml`.
+5. Under **Restrict events**, allow `pull_request_target`.
+6. Save the policy, then check **Policy insights** to confirm the workflow is no longer reported as blocked.
+
+For full details, see
+[Governing execution of GitHub Actions workflows](https://docs.github.com/actions/how-tos/administer/control-workflow-execution).
+
+> [!TIP]
+> Keep the allowed workflow minimal: only the job that runs this Action. Allowing a broader set of workflows increases
+> the risk of running untrusted code with access to your secrets.
 
 ## GITHUB_TOKEN permissions
 
